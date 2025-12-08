@@ -1,0 +1,66 @@
+<nav>
+    <div class="nav-container">
+        <div class="logo" routerLink="/">
+            <i class="fas fa-paw"></i>
+            <span>MASK!OTAS</span>
+        </div>
+
+        <div class="nav-links" [class.responsive]="mobileMenuOpen">
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                (click)="closeMobileMenu()">Inicio</a>
+            <a routerLink="/servicios" routerLinkActive="active" (click)="closeMobileMenu()">Servicios</a>
+            <a routerLink="/citas" routerLinkActive="active" (click)="closeMobileMenu()">Reservar Cita</a>
+            <a href="#blog">Blog</a>
+            <a href="#resenias">Reseñas</a>
+            <a href="#suscribirse">Suscribete</a>
+            <a routerLink="/contacto" routerLinkActive="active" (click)="closeMobileMenu()">Contacto</a>
+
+            <!-- Botones de autenticación en móvil -->
+            <div class="mobile-auth-buttons" *ngIf="mobileMenuOpen">
+                <ng-container *ngIf="!currentUser; else mobileUserInfo">
+                    <button class="auth-btn login-btn" (click)="openLoginModal()">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </button>
+                    <button class="auth-btn register-btn" (click)="openRegisterModal()">
+                        <i class="fas fa-user-plus"></i> Registrarse
+                    </button>
+                </ng-container>
+                <ng-template #mobileUserInfo>
+                    <span class="welcome-text">Bienvenido, {{currentUser?.username}}</span>
+                    <button class="logout-btn" (click)="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </button>
+                </ng-template>
+            </div>
+        </div>
+
+        <!-- Botones de autenticación en desktop -->
+        <div class="auth-buttons desktop-auth">
+            <ng-container *ngIf="!currentUser; else userInfo">
+                <button class="auth-btn login-btn" (click)="openLoginModal()">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+                <button class="auth-btn register-btn" (click)="openRegisterModal()">
+                    <i class="fas fa-user-plus"></i> Registrarse
+                </button>
+            </ng-container>
+            <ng-template #userInfo>
+                <div class="user-info">
+                    <span class="welcome-text">Bienvenido, {{currentUser?.username}}</span>
+                    <button class="logout-btn" (click)="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </button>
+                </div>
+            </ng-template>
+        </div>
+
+        <!-- Menu hamburguesa -->
+        <div class="menu-icon">
+            <a href="javascript:void(0);" class="hamburguesa" (click)="toggleMobileMenu()">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div>
+
+        <div class="gtranslate_wrapper"></div>
+    </div>
+</nav>

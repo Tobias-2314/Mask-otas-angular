@@ -1,0 +1,108 @@
+/* Estilos Globales - Migrados de style.css original */
+
+/* Reset y estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(249, 250, 251);
+    margin: 0;
+    padding: 0;
+}
+
+/* Variables CSS */
+:root {
+    --color-primary: #009688;
+    --color-primary-dark: #00695c;
+    --color-primary-darker: #004d40;
+    --color-text-gray: #4b5563;
+    --color-text-light-gray: #9ca3af;
+    --color-bg-gray: rgb(243, 244, 246);
+    --color-bg-light: rgb(249, 250, 251);
+    --color-footer-bg: #1f2937;
+    --color-rating: #fbbf24;
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Estilos de enfoque para accesibilidad */
+:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Contenedor general */
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Utilidades */
+.text-center {
+    text-align: center;
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+}
+
+/* Mejoras de accesibilidad para impresión */
+@media print {
+
+    nav,
+    .newsletter,
+    .social-links {
+        display: none;
+    }
+
+    body {
+        color: black;
+        background: white;
+    }
+
+    .container {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+    }
+}

@@ -1,0 +1,10 @@
+<div *ngIf="showPopup" class="cookie-popup">
+    <div class="cookie-content">
+        <p>Utilizamos cookies para mejorar tu experiencia en nuestro sitio web. Al continuar navegando, aceptas nuestro
+            uso de cookies.
+            <a href="/legal#cookies">Más información</a>.
+        </p>
+        <button (click)="acceptCookies()" class="cookie-button">Aceptar</button>
+        <button (click)="rejectCookies()" class="cookie-button">No aceptar</button>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+<!-- Modal de Login -->
+<div *ngIf="showLoginModal" class="modal" (click)="closeLoginModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</h2>
+            <span class="close" (click)="closeLoginModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+                <div class="form-group">
+                    <label for="loginEmail">
+                        <i class="fas fa-envelope"></i> Correo Electrónico
+                    </label>
+                    <input type="email" id="loginEmail" formControlName="email" required>
+                    <div class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                        Email inválido
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <input type="password" id="loginPassword" formControlName="password" required>
+                    <div class="error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                        Contraseña requerida (mínimo 6 caracteres)
+                    </div>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" formControlName="rememberMe">
+                        <span class="checkmark"></span>
+                        Recordarme
+                    </label>
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+                <button type="submit" class="modal-btn primary" [disabled]="isLoading">
+                    <i class="fas fa-sign-in-alt"></i> {{ isLoading ? 'Cargando...' : 'Iniciar Sesión' }}
+                </button>
+            </form>
+            <div class="modal-footer">
+                <p>¿No tienes cuenta? <a href="#" (click)="switchToRegister(); $event.preventDefault()">Regístrate
+                        aquí</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Registro -->
+<div *ngIf="showRegisterModal" class="modal" (click)="closeRegisterModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2><i class="fas fa-user-plus"></i> Crear Cuenta</h2>
+            <span class="close" (click)="closeRegisterModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+                <div class="form-group">
+                    <label for="registerUsername">
+                        <i class="fas fa-user"></i> Nombre de Usuario
+                    </label>
+                    <input type="text" id="registerUsername" formControlName="username" required>
+                    <div class="error"
+                        *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched">
+                        Nombre de usuario requerido (mínimo 3 caracteres)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">
+                        <i class="fas fa-envelope"></i> Correo Electrónico
+                    </label>
+                    <input type="email" id="registerEmail" formControlName="email" required>
+                    <div class="error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+                        Email inválido
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="registerCountry">
+                        <i class="fas fa-globe"></i> País
+                    </label>
+                    <select id="registerCountry" formControlName="countryCode" (change)="onCountryChange()" required>
+                        <option value="">Selecciona un país</option>
+                        <option *ngFor="let country of countries" [value]="country.code">{{country.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="registerCity">
+                        <i class="fas fa-map-marker-alt"></i> Ciudad
+                    </label>
+                    <select id="registerCity" formControlName="cityId" required>
+                        <option value="">Primero selecciona un país</option>
+                        <option *ngFor="let city of cities" [value]="city.id">{{city.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <input type="password" id="registerPassword" formControlName="password" required>
+                    <div class="error"
+                        *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                        Contraseña requerida (mínimo 6 caracteres)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        <i class="fas fa-lock"></i> Confirmar Contraseña
+                    </label>
+                    <input type="password" id="confirmPassword" formControlName="confirmPassword" required>
+                    <div class="error"
+                        *ngIf="registerForm.get('confirmPassword')?.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched">
+                        Las contraseñas no coinciden
+                    </div>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" formControlName="acceptTerms" required>
+                        <span class="checkmark"></span>
+                        Acepto los <a href="/legal#legal" target="_blank">términos y condiciones</a>
+                    </label>
+                </div>
+                <button type="submit" class="modal-btn primary" [disabled]="isLoading">
+                    <i class="fas fa-user-plus"></i> {{ isLoading ? 'Cargando...' : 'Crear Cuenta' }}
+                </button>
+            </form>
+            <div class="modal-footer">
+                <p>¿Ya tienes cuenta? <a href="#" (click)="switchToLogin(); $event.preventDefault()">Inicia sesión
+                        aquí</a></p>
+            </div>
+        </div>
+    </div>
+</div>

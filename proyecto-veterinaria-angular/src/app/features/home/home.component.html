@@ -1,0 +1,86 @@
+<!-- Hero Section con Video -->
+<section id="citas" class="hero">
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="/videos/perro.mp4" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+    </div>
+    <div class="hero-container">
+        <img src="/imagenes/logo.svg" alt="Logo" class="hero-logo">
+        <div class="hero-content">
+            <h1>Porque son algo más que mascotas</h1>
+            <p>Primera consulta gratuita para nuevos pacientes</p>
+            <button class="cta-button">
+                <a routerLink="/citas">Reserva tu cita ahora</a>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de Servicios -->
+<section id="servicios" class="services">
+    <div class="container">
+        <h2>Nuestros Servicios</h2>
+        <div class="services-grid">
+            <a *ngFor="let service of services" [routerLink]="service.link" class="no-link">
+                <div class="service-card">
+                    <i [class]="service.icon"></i>
+                    <h3>{{service.title}}</h3>
+                    <p>{{service.description}}</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de Blog -->
+<section id="blog" class="blog">
+    <div class="container">
+        <h2>Tips y Consejos</h2>
+        <div class="blog-grid">
+            <article *ngFor="let post of blogPosts" class="blog-card">
+                <img [src]="post.image" [alt]="post.title">
+                <div class="blog-content">
+                    <h3>{{post.title}}</h3>
+                    <p>{{post.description}}</p>
+                    <a [routerLink]="post.link">Leer más →</a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de Testimonios -->
+<section id="resenias" class="testimonials">
+    <div class="container">
+        <h2>Lo que dicen nuestros clientes</h2>
+        <div class="testimonials-grid">
+            <div *ngFor="let testimonial of testimonials" class="testimonial-card">
+                <div class="testimonial-header">
+                    <img [src]="testimonial.image" [alt]="testimonial.name">
+                    <div>
+                        <h4>{{testimonial.name}}</h4>
+                        <div class="rating">{{getStars(testimonial.rating).join('')}}</div>
+                    </div>
+                </div>
+                <p>{{testimonial.comment}}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de Newsletter -->
+<section id="suscribirse" class="newsletter">
+    <div class="container">
+        <h2>Mantente informado</h2>
+        <p>Recibe consejos y promociones exclusivas para el cuidado de tu mascota</p>
+        <div class="newsletter-form">
+            <form (ngSubmit)="onNewsletterSubmit()">
+                <input type="email" [(ngModel)]="newsletterEmail" name="email" placeholder="Tu correo electrónico"
+                    required>
+                <button type="submit">Suscribirse</button>
+            </form>
+        </div>
+    </div>
+</section>
