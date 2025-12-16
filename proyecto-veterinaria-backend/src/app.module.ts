@@ -7,14 +7,17 @@ import { AppointmentsModule } from './appointments/appointments.module';
 import { LocationModule } from './location/location.module';
 import { ContactModule } from './contact/contact.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 // Importar entidades explícitamente
 import { User } from './users/user.entity';
 import { Country } from './location/country.entity';
 import { City } from './location/city.entity';
 import { Appointment } from './appointments/appointment.entity';
+import { TimeSlot } from './appointments/time-slot.entity';
 import { Contact } from './contact/contact.entity';
 import { NewsletterSubscription } from './newsletter/newsletter.entity';
+import { Review } from './reviews/review.entity';
 
 @Module({
     imports: [
@@ -34,8 +37,8 @@ import { NewsletterSubscription } from './newsletter/newsletter.entity';
                 username: configService.get('DATABASE_USER'),
                 password: configService.get('DATABASE_PASSWORD'),
                 database: configService.get('DATABASE_NAME'),
-                entities: [User, Country, City, Appointment, Contact, NewsletterSubscription],
-                synchronize: false, // Desactivado - usando tablas creadas manualmente
+                entities: [User, Country, City, Appointment, TimeSlot, Contact, NewsletterSubscription, Review],
+                synchronize: false, // Desactivado - crearemos la tabla manualmente
                 logging: configService.get('NODE_ENV') === 'development',
             }),
             inject: [ConfigService],
@@ -48,6 +51,7 @@ import { NewsletterSubscription } from './newsletter/newsletter.entity';
         LocationModule,
         ContactModule,
         NewsletterModule,
+        ReviewsModule,
     ],
 })
 export class AppModule { }

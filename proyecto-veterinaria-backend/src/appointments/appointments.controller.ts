@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, UseGuards, Request, Query } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -12,10 +12,20 @@ export class AppointmentsController {
         return this.appointmentsService.create(createAppointmentDto);
     }
 
+    @Get('time-slots')
+    async getTimeSlots(@Query('startDate') startDate: string, @Query('endDate') endDate: string) {
+        return this.appointmentsService.getTimeSlots(startDate, endDate);
+    }
+
     @UseGuards(JwtAuthGuard)
     @Get('my-appointments')
     async getMyAppointments(@Request() req) {
         return this.appointmentsService.findByUser(req.user.id);
+    }
+
+    @Get('all')
+    async getAllAppointments() {
+        return this.appointmentsService.findAll();
     }
 
     @Get(':id')

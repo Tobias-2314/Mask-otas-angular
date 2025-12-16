@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NewsletterService } from '../../core/services/newsletter.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { ReviewsService, Review } from '../../core/services/reviews.service';
 
 @Component({
     selector: 'app-home',
@@ -12,8 +13,11 @@ import { NotificationService } from '../../core/services/notification.service';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
     newsletterEmail = '';
+    reviews: Review[] = [];
+    reviewStats = { average: 0, total: 0 };
+    loadingReviews = false;
 
     services = [
         {
@@ -57,31 +61,42 @@ export class HomeComponent {
         }
     ];
 
-    testimonials = [
-        {
-            name: 'María García',
-            rating: 4,
-            comment: '"Excelente atención, mi perrito Max siempre recibe el mejor cuidado. ¡Totalmente recomendado!"',
-            image: '/imagenes/reseña.png'
-        },
-        {
-            name: 'Paco Lopez',
-            rating: 5,
-            comment: '"Excelente!!, mi gato Tobias está super contento por haber sido capado . ¡Super recomendado!"',
-            image: '/imagenes/reseña.png'
-        },
-        {
-            name: 'Laura Trillo',
-            rating: 5,
-            comment: '"Estoy super contenta de haber llevado a mi mascota a Mask!otas, son todos muy profesionales y muy amables. ¡Gracias por todo!"',
-            image: '/imagenes/reseña.png'
-        }
-    ];
-
     constructor(
         private newsletterService: NewsletterService,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        private reviewsService: ReviewsService
     ) { }
+
+    ngOnInit(): void {
+        this.loadReviews();
+        this.loadStats();
+    }
+
+    loadReviews(): void {
+        this.loadingReviews = true;
+        this.reviewsService.getReviews().subscribe({
+            next: (reviews) => {
+                // Mostrar solo las últimas 3 reseñas
+                this.reviews = reviews.slice(0, 3);
+                this.loadingReviews = false;
+            },
+            error: (error) => {
+                console.error('Error cargando reseñas:', error);
+                this.loadingReviews = false;
+            }
+        });
+    }
+
+    loadStats(): void {
+        this.reviewsService.getReviewStats().subscribe({
+            next: (stats) => {
+                this.reviewStats = stats;
+            },
+            error: (error) => {
+                console.error('Error cargando estadísticas:', error);
+            }
+        });
+    }
 
     getStars(rating: number): string[] {
         return Array(rating).fill('★');

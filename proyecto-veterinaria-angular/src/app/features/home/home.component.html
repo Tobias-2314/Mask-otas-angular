@@ -21,10 +21,10 @@
 <!-- Sección de Servicios -->
 <section id="servicios" class="services">
     <div class="container">
-        <h2>Nuestros Servicios</h2>
+        <h2 class="animate-on-scroll">Nuestros Servicios</h2>
         <div class="services-grid">
-            <a *ngFor="let service of services" [routerLink]="service.link" class="no-link">
-                <div class="service-card">
+            <a *ngFor="let service of services; let i = index" [routerLink]="service.link" class="no-link">
+                <div class="service-card animate-on-scroll" [style.transition-delay]="(i * 100) + 'ms'">
                     <i [class]="service.icon"></i>
                     <h3>{{service.title}}</h3>
                     <p>{{service.description}}</p>
@@ -37,9 +37,10 @@
 <!-- Sección de Blog -->
 <section id="blog" class="blog">
     <div class="container">
-        <h2>Tips y Consejos</h2>
+        <h2 class="animate-on-scroll">Tips y Consejos</h2>
         <div class="blog-grid">
-            <article *ngFor="let post of blogPosts" class="blog-card">
+            <article *ngFor="let post of blogPosts; let i = index" class="blog-card animate-on-scroll"
+                [style.transition-delay]="(i * 100) + 'ms'">
                 <img [src]="post.image" [alt]="post.title">
                 <div class="blog-content">
                     <h3>{{post.title}}</h3>
@@ -54,24 +55,71 @@
 <!-- Sección de Testimonios -->
 <section id="resenias" class="testimonials">
     <div class="container">
-        <h2>Lo que dicen nuestros clientes</h2>
+        <div class="testimonials-header animate-on-scroll">
+            <h2>Lo que dicen nuestros clientes</h2>
+            @if (reviewStats.total > 0) {
+            <div class="review-stats">
+                <div class="average-rating">
+                    <span class="rating-number">{{ reviewStats.average }}</span>
+                    <div class="stars">
+                        @for (star of [1,2,3,4,5]; track star) {
+                        <i class="fas fa-star" [class.filled]="star <= reviewStats.average"></i>
+                        }
+                    </div>
+                    <span class="total-reviews">{{ reviewStats.total }} reseñas</span>
+                </div>
+            </div>
+            }
+        </div>
+
+        @if (loadingReviews) {
+        <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando reseñas...</p>
+        </div>
+        } @else if (reviews.length > 0) {
         <div class="testimonials-grid">
-            <div *ngFor="let testimonial of testimonials" class="testimonial-card">
+            @for (review of reviews; track review.id; let i = $index) {
+            <div class="testimonial-card animate-on-scroll" [style.transition-delay]="(i * 100) + 'ms'">
                 <div class="testimonial-header">
-                    <img [src]="testimonial.image" [alt]="testimonial.name">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
                     <div>
-                        <h4>{{testimonial.name}}</h4>
-                        <div class="rating">{{getStars(testimonial.rating).join('')}}</div>
+                        <h4>{{ review.customer_name }}</h4>
+                        <div class="rating">
+                            @for (star of [1,2,3,4,5]; track star) {
+                            <i class="fas fa-star" [class.filled]="star <= review.rating"></i>
+                            }
+                        </div>
                     </div>
                 </div>
-                <p>{{testimonial.comment}}</p>
+                <p>"{{ review.comment }}"</p>
+                @if (review.pet_name) {
+                <span class="pet-name"><i class="fas fa-paw"></i> {{ review.pet_name }}</span>
+                }
             </div>
+            }
         </div>
+        <div class="view-all-reviews">
+            <a routerLink="/resenas" class="btn-view-all">
+                <i class="fas fa-comments"></i> Ver todas las reseñas
+            </a>
+        </div>
+        } @else {
+        <div class="no-reviews">
+            <i class="fas fa-comments"></i>
+            <p>Sé el primero en dejar una reseña</p>
+            <a routerLink="/resenas" class="btn-add-review">
+                <i class="fas fa-pen"></i> Agregar reseña
+            </a>
+        </div>
+        }
     </div>
 </section>
 
 <!-- Sección de Newsletter -->
-<section id="suscribirse" class="newsletter">
+<section id="suscribirse" class="newsletter animate-on-scroll">
     <div class="container">
         <h2>Mantente informado</h2>
         <p>Recibe consejos y promociones exclusivas para el cuidado de tu mascota</p>

@@ -7,7 +7,14 @@ async function bootstrap() {
 
     // Enable CORS
     app.enableCors({
-        origin: process.env.CORS_ORIGIN || 'http://localhost:4200',
+        origin: (origin, callback) => {
+            // Permitir cualquier localhost en desarrollo
+            if (!origin || origin.startsWith('http://localhost:')) {
+                callback(null, true);
+            } else {
+                callback(null, process.env.CORS_ORIGIN || 'http://localhost:4200');
+            }
+        },
         credentials: true,
     });
 

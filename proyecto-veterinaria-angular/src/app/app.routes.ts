@@ -45,6 +45,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/gracias/gracias.component').then(m => m.GraciasComponent)
     },
     {
+        path: 'resenas',
+        loadComponent: () => import('./features/reviews/reviews.component').then(m => m.ReviewsComponent)
+    },
+    {
         path: '**',
         redirectTo: ''
     }

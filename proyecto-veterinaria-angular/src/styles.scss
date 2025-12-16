@@ -54,7 +54,7 @@ html {
     font-weight: bold;
 }
 
-/* Animaciones */
+/* Animaciones Básicas */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -105,4 +105,154 @@ html {
         max-width: none;
         padding: 0;
     }
+}
+
+
+/* =========================================
+   NUEVAS ANIMACIONES GLOBALES
+   ========================================= */
+
+/* Clases base para animaciones */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    will-change: opacity, transform;
+}
+
+.animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Retardos para elementos en secuencia (grid) */
+.delay-100 {
+    transition-delay: 0.1s;
+}
+
+.delay-200 {
+    transition-delay: 0.2s;
+}
+
+.delay-300 {
+    transition-delay: 0.3s;
+}
+
+.delay-400 {
+    transition-delay: 0.4s;
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes pulse-soft {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Efectos en Hero Section */
+.hero h1 {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.hero p {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+    /* Estado inicial */
+}
+
+.hero .cta-button {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards, pulse-soft 2s infinite 1.2s;
+    opacity: 0;
+    /* Estado inicial */
+}
+
+/* Efectos Hover Globales */
+button,
+.btn,
+.cta-button,
+.card,
+.service-card,
+.blog-card,
+.testimonial-card {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+button:active,
+.btn:active {
+    transform: scale(0.95);
+}
+
+/* Hover en Tarjetas */
+.service-card:hover,
+.blog-card:hover,
+.testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Animación de carga */
+.loading-spinner {
+    animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-dark);
 }

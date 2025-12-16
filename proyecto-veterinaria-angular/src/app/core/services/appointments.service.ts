@@ -4,10 +4,14 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface CreateAppointmentDto {
-    petName: string;
-    petType: string;
-    serviceType: string;
-    appointmentDate: string;
+    owner_name: string;
+    email: string;
+    phone: string;
+    pet_name: string;
+    pet_type: string;
+    service_type: string;
+    preferred_date: string;
+    preferred_time: string;
     notes?: string;
 }
 
