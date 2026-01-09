@@ -86,9 +86,6 @@ export class AuthService {
 
         return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register`, data, { headers })
             .pipe(
-                tap(response => {
-                    console.log('Registro exitoso:', response);
-                }),
                 catchError(error => {
                     console.error('Error de registro:', error);
                     const errorMessage = error.error?.message || 'Error de conexión con el servidor';

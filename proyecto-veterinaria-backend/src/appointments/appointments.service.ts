@@ -15,8 +15,6 @@ export class AppointmentsService {
     ) { }
 
     async create(createAppointmentDto: CreateAppointmentDto, userId?: string) {
-        console.log('Creando cita con datos:', createAppointmentDto);
-
         // Verificar y obtener/crear el slot
         let timeSlot = await this.timeSlotsRepository.findOne({
             where: {
@@ -57,9 +55,6 @@ export class AppointmentsService {
         timeSlot.current_bookings += 1;
         await this.timeSlotsRepository.save(timeSlot);
 
-        console.log('Cita guardada:', appointment);
-        console.log(`Slot actualizado: ${timeSlot.current_bookings}/${timeSlot.max_capacity} reservas`);
-
         return {
             success: true,
             message: 'Appointment created successfully',
@@ -80,14 +75,6 @@ export class AppointmentsService {
             relations: ['user'],
             order: { created_at: 'DESC' },
         });
-
-        console.log('Citas encontradas:', appointments.length);
-        if (appointments.length > 0) {
-            console.log('Primera cita:', {
-                preferred_date: appointments[0].preferred_date,
-                preferred_time: appointments[0].preferred_time
-            });
-        }
 
         return appointments;
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ReviewsService, Review, CreateReviewDto } from '../../core/services/reviews.service';
@@ -8,6 +8,7 @@ import { NotificationService } from '../../core/services/notification.service';
   selector: 'app-reviews',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="reviews-container">
       <!-- Sección de Reseñas Existentes -->
@@ -405,7 +406,8 @@ export class ReviewsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private reviewsService: ReviewsService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private cdr: ChangeDetectorRef
   ) {
     this.reviewForm = this.fb.group({
       customer_name: ['', [Validators.required, Validators.minLength(2)]],
@@ -428,10 +430,12 @@ export class ReviewsComponent implements OnInit {
         this.totalPages = Math.ceil(reviews.length / this.itemsPerPage);
         this.updateDisplayedReviews();
         this.loadingReviews = false;
+        this.cdr.markForCheck(); // Forzar detección de cambios con OnPush
       },
       error: (error) => {
         console.error('Error cargando reseñas:', error);
         this.loadingReviews = false;
+        this.cdr.markForCheck(); // Forzar detección de cambios incluso en error
       }
     });
   }

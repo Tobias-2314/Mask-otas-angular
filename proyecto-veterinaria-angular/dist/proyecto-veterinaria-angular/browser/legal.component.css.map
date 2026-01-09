@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["legal.component.ts"],
+  "sourcesContent": ["\n    .page-container {\n      min-height: calc(100vh - 200px);\n      padding: 4rem 0;\n      background-color: white;\n    }\n\n    h1 {\n      font-size: 2.5rem;\n      color: var(--color-primary);\n      text-align: center;\n      margin-bottom: 3rem;\n    }\n\n    section {\n      margin-bottom: 3rem;\n      padding: 2rem;\n      background-color: var(--color-bg-light);\n      border-radius: 0.5rem;\n    }\n\n    h2 {\n      color: var(--color-primary);\n      margin-bottom: 1rem;\n      font-size: 1.5rem;\n    }\n\n    p {\n      color: var(--color-text-gray);\n      line-height: 1.6;\n      margin-bottom: 1rem;\n    }\n\n    ul {\n      color: var(--color-text-gray);\n      line-height: 1.8;\n    }\n  "],
+  "mappings": ";AACI,CAAA;AACE,cAAA,KAAA,MAAA,EAAA;AACA,WAAA,KAAA;AACA,oBAAA;;AAGF;AACE,aAAA;AACA,SAAA,IAAA;AACA,cAAA;AACA,iBAAA;;AAGF;AACE,iBAAA;AACA,WAAA;AACA,oBAAA,IAAA;AACA,iBAAA;;AAGF;AACE,SAAA,IAAA;AACA,iBAAA;AACA,aAAA;;AAGF;AACE,SAAA,IAAA;AACA,eAAA;AACA,iBAAA;;AAGF;AACE,SAAA,IAAA;AACA,eAAA;;",
+  "names": []
+}

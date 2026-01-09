@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["nutricion.component.ts"],
+  "sourcesContent": ["\n    .page-container {\n      min-height: calc(100vh - 200px);\n      padding: 4rem 0;\n      background-color: white;\n    }\n\n    .blog-article h1 {\n      font-size: 2.5rem;\n      color: var(--color-primary);\n      text-align: center;\n      margin-bottom: 2rem;\n    }\n\n    .blog-content {\n      max-width: 800px;\n      margin: 0 auto;\n    }\n\n    .blog-content p {\n      color: var(--color-text-gray);\n      line-height: 1.8;\n      margin-bottom: 1.5rem;\n      font-size: 1.1rem;\n    }\n  "],
+  "mappings": ";AACI,CAAA;AACE,cAAA,KAAA,MAAA,EAAA;AACA,WAAA,KAAA;AACA,oBAAA;;AAGF,CAAA,aAAA;AACE,aAAA;AACA,SAAA,IAAA;AACA,cAAA;AACA,iBAAA;;AAGF,CAAA;AACE,aAAA;AACA,UAAA,EAAA;;AAGF,CALA,aAKA;AACE,SAAA,IAAA;AACA,eAAA;AACA,iBAAA;AACA,aAAA;;",
+  "names": []
+}

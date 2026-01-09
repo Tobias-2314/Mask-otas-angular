@@ -31,14 +31,14 @@ import { Review } from './reviews/review.entity';
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: (configService: ConfigService) => ({
-                type: 'postgres',
+                type: 'mysql',
                 host: configService.get('DATABASE_HOST'),
-                port: +configService.get<number>('DATABASE_PORT'),
+                port: +configService.get<number>('DATABASE_PORT') || 3306,
                 username: configService.get('DATABASE_USER'),
                 password: configService.get('DATABASE_PASSWORD'),
                 database: configService.get('DATABASE_NAME'),
                 entities: [User, Country, City, Appointment, TimeSlot, Contact, NewsletterSubscription, Review],
-                synchronize: false, // Desactivado - crearemos la tabla manualmente
+                synchronize: true, // Activado para desarrollo para crear tablas automáticamente en MySQL
                 logging: configService.get('NODE_ENV') === 'development',
             }),
             inject: [ConfigService],

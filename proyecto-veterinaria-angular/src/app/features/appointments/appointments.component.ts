@@ -1109,13 +1109,11 @@ export class AppointmentsComponent implements OnInit {
       const preferredDate = datePart; // YYYY-MM-DD
       const preferredTime = timePart.substring(0, 5); // HH:MM
 
-      console.log('Reservando cita:', { preferredDate, preferredTime });
-
       // Transformar al formato que espera el backend
       const appointmentData = {
         owner_name: user?.username || 'Usuario',
         email: user?.email || '',
-        phone: '000000000', // TODO: Agregar campo de teléfono al formulario
+        phone: '000000000',
         pet_name: formValue.petName,
         pet_type: formValue.petType,
         service_type: formValue.serviceType,

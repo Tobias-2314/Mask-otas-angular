@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { LocationService, Country, City } from '../../../core/services/location.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { ModalService } from '../../../core/services/modal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-auth-modal',
@@ -12,7 +14,7 @@ import { NotificationService } from '../../../core/services/notification.service
     templateUrl: './auth-modal.component.html',
     styleUrls: ['./auth-modal.component.scss']
 })
-export class AuthModalComponent implements OnInit {
+export class AuthModalComponent implements OnInit, OnDestroy {
     showLoginModal = false;
     showRegisterModal = false;
     loginForm!: FormGroup;
@@ -20,12 +22,14 @@ export class AuthModalComponent implements OnInit {
     countries: Country[] = [];
     cities: City[] = [];
     isLoading = false;
+    private subscriptions = new Subscription();
 
     constructor(
         private fb: FormBuilder,
         private authService: AuthService,
         private locationService: LocationService,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        private modalService: ModalService
     ) { }
 
     ngOnInit(): void {
@@ -64,8 +68,18 @@ export class AuthModalComponent implements OnInit {
     }
 
     private setupEventListeners(): void {
-        window.addEventListener('openLoginModal', () => this.openLoginModal());
-        window.addEventListener('openRegisterModal', () => this.openRegisterModal());
+        // Suscribirse a los eventos del ModalService
+        this.subscriptions.add(
+            this.modalService.loginModal$.subscribe(() => this.openLoginModal())
+        );
+        this.subscriptions.add(
+            this.modalService.registerModal$.subscribe(() => this.openRegisterModal())
+        );
+    }
+
+    ngOnDestroy(): void {
+        // Limpiar suscripciones para evitar memory leaks
+        this.subscriptions.unsubscribe();
     }
 
     private loadCountries(): void {

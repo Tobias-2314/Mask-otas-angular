@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-services',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-services',
+  standalone: true,
+  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
     <div class="page-container">
       <section class="services-detail">
         <div class="container">
@@ -47,7 +48,7 @@ import { CommonModule } from '@angular/common';
       </section>
     </div>
   `,
-    styles: [`
+  styles: [`
     .page-container {
       min-height: calc(100vh - 200px);
       padding: 4rem 0;

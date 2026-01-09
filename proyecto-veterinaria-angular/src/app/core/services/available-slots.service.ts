@@ -54,7 +54,6 @@ export class AvailableSlotsService {
      * @param serviceType Tipo de servicio (opcional)
      */
     getAvailableSlots(startDate: string, endDate: string, serviceType?: string): Observable<AvailableSlotsResponse> {
-        console.log(`🔍 Consultando horarios: ${startDate} a ${endDate}`);
 
         // Generar todos los horarios posibles para el rango de fechas
         const allSlots = this.generateAllPossibleSlots(startDate, endDate);
@@ -64,7 +63,6 @@ export class AvailableSlotsService {
             params: { startDate, endDate }
         }).pipe(
             map(bookedSlots => {
-                console.log(`✅ Respuesta del servidor:`, bookedSlots);
                 // Marcar los slots ocupados
                 return this.markOccupiedSlots(allSlots, bookedSlots);
             }),
@@ -95,9 +93,6 @@ export class AvailableSlotsService {
      * Reserva temporalmente un horario (para evitar doble reserva)
      */
     reserveSlot(date: string, time: string): Observable<{ success: boolean; reservationId: string }> {
-        // TODO: Implementar cuando el backend esté listo
-        // return this.http.post<{ success: boolean; reservationId: string }>(`${this.apiUrl}/appointments/reserve-slot`, { date, time });
-
         return of({ success: true, reservationId: `temp-${Date.now()}` });
     }
 
@@ -165,7 +160,6 @@ export class AvailableSlotsService {
      * Marca los slots ocupados basándose en los datos de la BD
      */
     private markOccupiedSlots(allSlots: AvailableSlotsResponse, bookedSlots: any[]): AvailableSlotsResponse {
-        console.log('📊 Slots de la BD:', bookedSlots);
 
         const days = allSlots.days.map(day => {
             const slots = day.slots.map(slot => {
@@ -180,10 +174,6 @@ export class AvailableSlotsService {
                         : new Date(bs.slot_date).toISOString().split('T')[0];
 
                     const match = dbDate === dayDateNormalized && bs.slot_time === slot.time;
-
-                    if (match) {
-                        console.log(`🔒 Slot ocupado encontrado: ${dbDate} ${bs.slot_time} (${bs.current_bookings}/${bs.max_capacity})`);
-                    }
 
                     return match;
                 });

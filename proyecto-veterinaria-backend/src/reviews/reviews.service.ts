@@ -31,21 +31,23 @@ export class ReviewsService {
     async createTable() {
         await this.reviewsRepository.query(`
             CREATE TABLE IF NOT EXISTS reviews (
-                id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
                 customer_name VARCHAR(255) NOT NULL,
-                rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+                rating INTEGER NOT NULL,
                 comment TEXT NOT NULL,
                 pet_name VARCHAR(255),
                 service_type VARCHAR(50),
-                is_approved BOOLEAN DEFAULT TRUE,
-                is_visible BOOLEAN DEFAULT TRUE,
-                user_id UUID REFERENCES users(id) ON DELETE SET NULL,
-                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                is_approved TINYINT(1) DEFAULT 1,
+                is_visible TINYINT(1) DEFAULT 1,
+                user_id CHAR(36),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT chk_rating CHECK (rating >= 1 AND rating <= 5),
+                CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
             );
             
-            CREATE INDEX IF NOT EXISTS idx_reviews_visible ON reviews(is_visible, is_approved);
-            CREATE INDEX IF NOT EXISTS idx_reviews_created ON reviews(created_at DESC);
-            CREATE INDEX IF NOT EXISTS idx_reviews_rating ON reviews(rating);
+            CREATE INDEX idx_reviews_visible ON reviews(is_visible, is_approved);
+            CREATE INDEX idx_reviews_created ON reviews(created_at);
+            CREATE INDEX idx_reviews_rating ON reviews(rating);
         `);
         return { message: 'Tabla reviews creada correctamente' };
     }

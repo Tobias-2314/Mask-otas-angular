@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://your-production-server.com/api' // TODO: Update with NestJS production URL
+    apiUrl: 'http://localhost:3000/api'
 };

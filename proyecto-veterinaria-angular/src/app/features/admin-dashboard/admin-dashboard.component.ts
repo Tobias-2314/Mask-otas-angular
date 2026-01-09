@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReviewsService, Review } from '../../core/services/reviews.service';
 import { NotificationService } from '../../core/services/notification.service';
 
@@ -336,60 +337,70 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadStats(): void {
-    this.reviewsService.getReviewStats().subscribe(stats => {
-      this.stats.totalReviews = stats.total;
-      this.stats.averageRating = stats.average;
-      // TODO: Agregar endpoint para conteo de pendientes en backend
-    });
+    this.reviewsService.getReviewStats()
+      .pipe(takeUntilDestroyed())
+      .subscribe(stats => {
+        this.stats.totalReviews = stats.total;
+        this.stats.averageRating = stats.average;
+        this.stats.pendingReviews = 0;
+      });
   }
 
   loadReviews(): void {
     this.activeTab = 'reviews';
     this.loading = true;
-    this.reviewsService.getAllReviewsForAdmin().subscribe({
-      next: (data) => {
-        this.reviews = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar reseñas', err);
-        this.loading = false;
-      }
-    });
+    this.reviewsService.getAllReviewsForAdmin()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (data) => {
+          this.reviews = data;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar reseñas', err);
+          this.loading = false;
+        }
+      });
   }
 
   approveReview(id: string): void {
-    this.reviewsService.approveReview(id).subscribe({
-      next: () => {
-        this.notificationService.showSuccess('Reseña aprobada');
-        this.loadReviews();
-        this.loadStats();
-      },
-      error: () => this.notificationService.showError('Error al aprobar reseña')
-    });
+    this.reviewsService.approveReview(id)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: () => {
+          this.notificationService.showSuccess('Reseña aprobada');
+          this.loadReviews();
+          this.loadStats();
+        },
+        error: () => this.notificationService.showError('Error al aprobar reseña')
+      });
   }
 
   hideReview(id: string): void {
-    this.reviewsService.hideReview(id).subscribe({
-      next: () => {
-        this.notificationService.showSuccess('Reseña ocultada');
-        this.loadReviews();
-        this.loadStats();
-      },
-      error: () => this.notificationService.showError('Error al ocultar reseña')
-    });
+    this.reviewsService.hideReview(id)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: () => {
+          this.notificationService.showSuccess('Reseña ocultada');
+          this.loadReviews();
+          this.loadStats();
+        },
+        error: () => this.notificationService.showError('Error al ocultar reseña')
+      });
   }
 
   deleteReview(id: string): void {
     if (confirm('¿Estás seguro de que quieres eliminar esta reseña?')) {
-      this.reviewsService.deleteReview(id).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Reseña eliminada');
-          this.loadReviews();
-          this.loadStats();
-        },
-        error: () => this.notificationService.showError('Error al eliminar reseña')
-      });
+      this.reviewsService.deleteReview(id)
+        .pipe(takeUntilDestroyed())
+        .subscribe({
+          next: () => {
+            this.notificationService.showSuccess('Reseña eliminada');
+            this.loadReviews();
+            this.loadStats();
+          },
+          error: () => this.notificationService.showError('Error al eliminar reseña')
+        });
     }
   }
 }
