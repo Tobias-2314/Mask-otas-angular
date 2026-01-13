@@ -24,3 +24,5 @@ Route::post('/appointments', [App\Http\Controllers\Api\AppointmentsController::c
 
 Route::get('/location/countries', [App\Http\Controllers\Api\LocationController::class, 'getCountries']);
 Route::get('/location/cities/{countryCode}', [App\Http\Controllers\Api\LocationController::class, 'getCities']);
+
+Route::post('/chat', [App\Http\Controllers\Api\AiChatController::class, 'chat']);
