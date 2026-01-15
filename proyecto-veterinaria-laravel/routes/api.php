@@ -26,3 +26,9 @@ Route::get('/location/countries', [App\Http\Controllers\Api\LocationController::
 Route::get('/location/cities/{countryCode}', [App\Http\Controllers\Api\LocationController::class, 'getCities']);
 
 Route::post('/chat', [App\Http\Controllers\Api\AiChatController::class, 'chat']);
+
+Route::get('/settings', [App\Http\Controllers\Api\SettingsController::class, 'index']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/settings', [App\Http\Controllers\Api\SettingsController::class, 'update']);
+    Route::post('/settings/logo', [App\Http\Controllers\Api\SettingsController::class, 'uploadLogo']);
+});

@@ -1,8 +1,11 @@
 <nav>
     <div class="nav-container">
         <div class="logo" routerLink="/">
-            <i class="fas fa-paw"></i>
-            <span>MASK!OTAS</span>
+            <ng-container *ngIf="themeService.logo$ | async as logo">
+                <img [src]="logo" alt="Logo" class="nav-logo-img" *ngIf="logo">
+            </ng-container>
+            <span *ngIf="!(themeService.logo$ | async)"><i class="fas fa-paw"></i></span>
+            <span>{{ (themeService.siteName$ | async) || 'MASK!OTAS' }}</span>
         </div>
 
         <div class="nav-links" [class.responsive]="mobileMenuOpen">

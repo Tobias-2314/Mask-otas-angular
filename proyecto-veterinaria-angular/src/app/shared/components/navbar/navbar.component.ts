@@ -5,6 +5,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService, User } from '../../../core/services/auth.service';
 import { ModalService } from '../../../core/services/modal.service';
 
+import { ThemeService } from '../../../core/services/theme.service';
+
 @Component({
     selector: 'app-navbar',
     standalone: true,
@@ -21,7 +23,8 @@ export class NavbarComponent {
 
     constructor(
         public authService: AuthService,
-        private modalService: ModalService
+        private modalService: ModalService,
+        public themeService: ThemeService
     ) {
         // Suscripción automáticamente limpiada cuando el componente se destruye
         this.authService.currentUser$

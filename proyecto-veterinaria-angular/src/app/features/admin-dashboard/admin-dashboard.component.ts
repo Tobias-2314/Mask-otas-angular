@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReviewsService, Review } from '../../core/services/reviews.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { DashboardSettingsComponent } from './settings/dashboard-settings.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DashboardSettingsComponent],
   template: `
     <div class="page-container">
       <div class="container">
@@ -26,6 +27,12 @@ import { NotificationService } from '../../core/services/notification.service';
                 [class.active]="activeTab === 'reviews'"
                 (click)="loadReviews()">
                 <i class="fas fa-comments"></i> Gestión de Reseñas
+            </button>
+            <button 
+                class="tab-btn" 
+                [class.active]="activeTab === 'settings'"
+                (click)="activeTab = 'settings'">
+                <i class="fas fa-paint-brush"></i> Personalización
             </button>
         </div>
 
@@ -50,6 +57,7 @@ import { NotificationService } from '../../core/services/notification.service';
         <!-- Pestaña: Gestión de Reseñas -->
         @if (activeTab === 'reviews') {
             <div class="reviews-management">
+                <!-- ... existing reviews content ... -->
                 <div class="table-header">
                     <h2>Administrar Reseñas</h2>
                     <button class="btn-refresh" (click)="loadReviews()">
@@ -128,6 +136,11 @@ import { NotificationService } from '../../core/services/notification.service';
                     </div>
                 }
             </div>
+        }
+
+        <!-- Pestaña: Personalización -->
+        @if (activeTab === 'settings') {
+            <app-dashboard-settings></app-dashboard-settings>
         }
       </div>
     </div>

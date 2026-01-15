@@ -1,10 +1,12 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { ThemeService } from './core/services/theme.service';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { CookiePopupComponent } from './shared/components/cookie-popup/cookie-popup.component';
 import { AuthModalComponent } from './shared/components/auth-modal/auth-modal.component';
+import { ChatbotComponent } from './shared/components/chatbot/chatbot.component';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +16,8 @@ import { AuthModalComponent } from './shared/components/auth-modal/auth-modal.co
         NavbarComponent,
         FooterComponent,
         CookiePopupComponent,
-        AuthModalComponent
+        AuthModalComponent,
+        ChatbotComponent
     ],
     template: `
     <app-navbar></app-navbar>
@@ -22,13 +25,21 @@ import { AuthModalComponent } from './shared/components/auth-modal/auth-modal.co
     <app-footer></app-footer>
     <app-cookie-popup></app-cookie-popup>
     <app-auth-modal></app-auth-modal>
+    <app-chatbot></app-chatbot>
   `,
     styles: []
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
     title = 'MASK!OTAS - Clínica Veterinaria';
 
-    constructor(private router: Router) { }
+    constructor(
+        private router: Router,
+        private themeService: ThemeService
+    ) { }
+
+    ngOnInit() {
+        this.themeService.loadTheme();
+    }
 
     ngAfterViewInit() {
         // Inicializar observador al cargar

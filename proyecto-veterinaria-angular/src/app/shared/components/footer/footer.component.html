@@ -2,7 +2,7 @@
     <div class="container">
         <div class="footer-grid">
             <div class="footer-section">
-                <h3>MASK!OTAS</h3>
+                <h3>{{ (themeService.siteName$ | async) || 'MASK!OTAS' }}</h3>
                 <p>Cuidando a tus mascotas con amor y profesionalismo desde 2024.</p>
             </div>
             <div class="footer-section">
