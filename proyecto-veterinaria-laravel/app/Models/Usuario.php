@@ -23,6 +23,7 @@ class Usuario extends Authenticatable
         'nombre',
         'email',
         'contrasena',
+        'es_admin',
     ];
 
     /**
@@ -45,6 +46,7 @@ class Usuario extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'contrasena' => 'hashed',
+            'es_admin' => 'boolean',
         ];
     }
     

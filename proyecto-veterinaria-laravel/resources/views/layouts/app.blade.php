@@ -30,6 +30,11 @@
 
             <div class="flex items-center gap-4">
                 @auth
+                    @if(Auth::user()->es_admin)
+                        <a href="{{ route('admin.dashboard') }}" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full text-sm font-bold transition">
+                            📊 Admin
+                        </a>
+                    @endif
                     <span class="text-sm font-semibold text-gray-700">Hola, {{ Auth::user()->nombre }}</span>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
