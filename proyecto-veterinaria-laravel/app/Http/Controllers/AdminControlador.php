@@ -37,7 +37,7 @@ class AdminControlador extends Controller
     // ========== GESTIÓN DE CITAS ==========
     public function citas()
     {
-        $citas = Cita::with('usuario')->orderBy('fecha', 'desc')->paginate(15);
+        $citas = Cita::with('usuario')->orderBy('fecha_preferida', 'desc')->paginate(15);
         return view('admin.citas', compact('citas'));
     }
 

@@ -41,9 +41,9 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $cita->id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $cita->usuario->nombre ?? 'N/A' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $cita->nombre_mascota }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ \Carbon\Carbon::parse($cita->fecha)->format('d/m/Y') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $cita->hora }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">{{ $cita->motivo }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ \Carbon\Carbon::parse($cita->fecha_preferida)->format('d/m/Y') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $cita->hora_preferida }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">{{ $cita->notas ?? 'N/A' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <form action="{{ route('admin.citas.estado', $cita->id) }}" method="POST" class="inline">
                                     @csrf

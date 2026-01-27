@@ -91,5 +91,62 @@
         </div>
     </footer>
 
+    <!-- Chatbot Flotante -->
+    <div id="chatbot-button" class="fixed bottom-6 right-6 z-50">
+        <button class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Contenedor del Chatbot -->
+    <div id="chatbot-container" class="hidden fixed bottom-6 right-6 z-50 w-96 bg-white rounded-lg shadow-2xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                    <span class="text-indigo-600 font-bold text-lg">🐾</span>
+                </div>
+                <div>
+                    <h3 class="font-bold">MaskBot</h3>
+                    <p class="text-xs text-indigo-200">Asistente Virtual</p>
+                </div>
+            </div>
+            <button id="chatbot-close" class="text-white hover:text-indigo-200 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mensajes -->
+        <div id="chatbot-messages" class="h-96 overflow-y-auto p-4 bg-gray-50">
+            <!-- Los mensajes se agregarán aquí dinámicamente -->
+        </div>
+
+        <!-- Input -->
+        <form id="chatbot-form" class="border-t border-gray-200 p-4 bg-white">
+            <div class="flex space-x-2">
+                <input 
+                    type="text" 
+                    id="chatbot-input" 
+                    placeholder="Escribe tu mensaje..." 
+                    class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    maxlength="500"
+                    required
+                >
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-4 py-2 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Script del Chatbot -->
+    <script src="{{ asset('js/chatbot.js') }}"></script>
+
 </body>
 </html>

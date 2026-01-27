@@ -46,3 +46,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/resenas', [AdminControlador::class, 'resenas'])->name('resenas');
     Route::delete('/resenas/{id}', [AdminControlador::class, 'eliminarResena'])->name('resenas.eliminar');
 });
+use App\Http\Controllers\ChatbotControlador;
+
+// Ruta del chatbot (POST)
+Route::post('/api/chat', [ChatbotControlador::class, 'chat'])->name('chatbot.chat');
+Route::get('/test-chat', function() {
+    return response()->json(['test' => 'ok']);
+});
