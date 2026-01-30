@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MASK!OTAS - Clínica Veterinaria</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script> <!-- Placeholder for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; }
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
     <!-- Navbar -->
@@ -19,9 +25,18 @@
             <a href="{{ url('/') }}" class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
                 <i class="fas fa-paw"></i> MASK!OTAS
             </a>
-            
+
             <div class="hidden md:flex space-x-8 items-center font-medium text-gray-600">
                 <a href="{{ url('/') }}" class="hover:text-indigo-600 transition">Inicio</a>
+                <a href="{{ route('tienda') }}" class="hover:text-indigo-600 transition">Tienda</a>
+                <a href="{{ route('cart.show') }}" class="hover:text-indigo-600 transition flex items-center">
+                    <i class="fas fa-shopping-cart mr-1"></i> Carrito
+                    @if(session('cart'))
+                        <span class="ml-1 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                            {{ count(session('cart')) }}
+                        </span>
+                    @endif
+                </a>
                 <a href="{{ url('/servicios') }}" class="hover:text-indigo-600 transition">Servicios</a>
                 <a href="{{ url('/citas/crear') }}" class="hover:text-indigo-600 transition">Citas</a>
                 <a href="{{ url('/resenas') }}" class="hover:text-indigo-600 transition">Reseñas</a>
@@ -31,20 +46,23 @@
             <div class="flex items-center gap-4">
                 @auth
                     @if(Auth::user()->es_admin)
-                        <a href="{{ route('admin.dashboard') }}" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full text-sm font-bold transition">
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full text-sm font-bold transition">
                             📊 Admin
                         </a>
                     @endif
                     <span class="text-sm font-semibold text-gray-700">Hola, {{ Auth::user()->nombre }}</span>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold transition">
+                        <button type="submit"
+                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold transition">
                             Salir
                         </button>
                     </form>
                 @else
                     <a href="{{ route('login') }}" class="text-indigo-600 font-semibold hover:underline">Ingresar</a>
-                    <a href="{{ route('registro') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-lg transform hover:scale-105 transition">
+                    <a href="{{ route('registro') }}"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-lg transform hover:scale-105 transition">
                         Registrarse
                     </a>
                 @endauth
@@ -149,4 +167,5 @@
     <script src="{{ asset('js/chatbot.js') }}"></script>
 
 </body>
+
 </html>

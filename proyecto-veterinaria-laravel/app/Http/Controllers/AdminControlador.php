@@ -16,7 +16,7 @@ class AdminControlador extends Controller
         $totalCitas = Cita::count();
         $totalResenas = Resena::count();
         $citasPendientes = Cita::where('estado', 'pendiente')->count();
-        
+
         return view('admin.dashboard', compact('totalUsuarios', 'totalCitas', 'totalResenas', 'citasPendientes'));
     }
 
@@ -46,7 +46,7 @@ class AdminControlador extends Controller
         $cita = Cita::findOrFail($id);
         $cita->estado = $request->estado;
         $cita->save();
-        
+
         return redirect()->route('admin.citas')->with('exito', 'Estado de la cita actualizado');
     }
 
@@ -69,5 +69,59 @@ class AdminControlador extends Controller
         $resena = Resena::findOrFail($id);
         $resena->delete();
         return redirect()->route('admin.resenas')->with('exito', 'Reseña eliminada correctamente');
+    }
+
+    // ========== GESTIÓN DE PRODUCTOS ==========
+    public function productos()
+    {
+        $productos = \App\Models\Product::orderBy('created_at', 'desc')->paginate(12);
+        return view('admin.productos', compact('productos'));
+    }
+
+    public function crearProducto()
+    {
+        return view('admin.productos-form');
+    }
+
+    public function guardarProducto(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'image' => 'nullable|url',
+        ]);
+
+        \App\Models\Product::create($request->all());
+        return redirect()->route('admin.productos')->with('exito', 'Producto creado correctamente');
+    }
+
+    public function editarProducto($id)
+    {
+        $producto = \App\Models\Product::findOrFail($id);
+        return view('admin.productos-form', compact('producto'));
+    }
+
+    public function actualizarProducto(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'image' => 'nullable|url',
+        ]);
+
+        $producto = \App\Models\Product::findOrFail($id);
+        $producto->update($request->all());
+        return redirect()->route('admin.productos')->with('exito', 'Producto actualizado correctamente');
+    }
+
+    public function eliminarProducto($id)
+    {
+        $producto = \App\Models\Product::findOrFail($id);
+        $producto->delete();
+        return redirect()->route('admin.productos')->with('exito', 'Producto eliminado correctamente');
     }
 }
