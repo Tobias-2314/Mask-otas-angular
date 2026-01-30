@@ -45,10 +45,17 @@
 
             <div class="flex items-center gap-4">
                 @auth
-                    @if(Auth::user()->es_admin)
+                    @if(Auth::user()->role === 'admin' || Auth::user()->es_admin)
                         <a href="{{ route('admin.dashboard') }}"
                             class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full text-sm font-bold transition">
                             📊 Admin
+                        </a>
+                    @endif
+                    
+                    @if(Auth::user()->role === 'veterinario')
+                        <a href="{{ route('veterinario.index') }}"
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm font-bold transition">
+                            🩺 Veterinario
                         </a>
                     @endif
                     <span class="text-sm font-semibold text-gray-700">Hola, {{ Auth::user()->nombre }}</span>

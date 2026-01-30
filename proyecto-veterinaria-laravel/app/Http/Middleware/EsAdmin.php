@@ -20,9 +20,9 @@ class EsAdmin
             return redirect()->route('login')->with('error', 'Debes iniciar sesión');
         }
 
-        // Verificar que el usuario sea admin (es_admin = 1)
-        if (!auth()->user()->es_admin) {
-            abort(403, 'No tienes permisos para acceder a esta área');
+        // Verificar que el usuario sea admin
+        if (auth()->user()->role !== 'admin' && !auth()->user()->es_admin) {
+             return redirect('/')->with('error', 'No tienes permisos de administrador.');
         }
 
         return $next($request);

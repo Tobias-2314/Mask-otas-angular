@@ -61,6 +61,24 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/productos/{id}/editar', [AdminControlador::class, 'editarProducto'])->name('productos.editar');
     Route::patch('/productos/{id}', [AdminControlador::class, 'actualizarProducto'])->name('productos.actualizar');
     Route::delete('/productos/{id}', [AdminControlador::class, 'eliminarProducto'])->name('productos.eliminar');
+
+    // Gestión de Mascotas (Historial)
+    Route::get('/mascotas', [AdminControlador::class, 'mascotas'])->name('mascotas');
+    Route::get('/mascotas/{id}', [AdminControlador::class, 'verMascota'])->name('mascotas.ver');
+    Route::post('/mascotas/{id}/historial', [AdminControlador::class, 'guardarHistorial'])->name('mascotas.historial');
+});
+
+// Mascotas (Usuario)
+Route::middleware('auth')->group(function () {
+    Route::get('/mascotas', [App\Http\Controllers\MascotaController::class, 'index'])->name('mascotas.index');
+    Route::get('/mascotas/crear', [App\Http\Controllers\MascotaController::class, 'create'])->name('mascotas.create');
+    Route::post('/mascotas', [App\Http\Controllers\MascotaController::class, 'store'])->name('mascotas.store');
+    Route::delete('/mascotas/{id}', [App\Http\Controllers\MascotaController::class, 'destroy'])->name('mascotas.destroy');
+
+    // Portal Veterinario
+    Route::get('/veterinario/dashboard', [App\Http\Controllers\VeterinarioController::class, 'index'])->name('veterinario.index');
+    Route::get('/veterinario/citas/{id}', [App\Http\Controllers\VeterinarioController::class, 'show'])->name('veterinario.show');
+    Route::patch('/veterinario/citas/{id}', [App\Http\Controllers\VeterinarioController::class, 'update'])->name('veterinario.update');
 });
 use App\Http\Controllers\ChatbotControlador;
 

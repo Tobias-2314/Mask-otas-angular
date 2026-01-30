@@ -37,17 +37,38 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium text-gray-700">Mascota</label>
+                    @if(count($mascotas) > 0)
+                        <select name="mascota_id" id="mascota_select" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" onchange="autoFillMascota()">
+                            <option value="">-- Seleccionar Mascota Registrada --</option>
+                            @foreach($mascotas as $mascota)
+                                <option value="{{ $mascota->id }}" data-nombre="{{ $mascota->nombre }}" data-tipo="{{ $mascota->tipo }}">
+                                    {{ $mascota->nombre }} ({{ $mascota->tipo }})
+                                </option>
+                            @endforeach
+                            <option value="">-- Otra / No Registrada --</option>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Selecciona una mascota o ingresa los datos manualmente.</p>
+                    @else
+                        <p class="text-sm text-gray-500 mt-2">
+                            <a href="{{ route('mascotas.create') }}" class="text-indigo-600 hover:underline">Registra tus mascotas</a> para agendar más rápido.
+                        </p>
+                    @endif
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium text-gray-700">Nombre Mascota</label>
-                    <input type="text" name="nombre_mascota" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" required>
+                    <input type="text" name="nombre_mascota" id="nombre_mascota" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Tipo de Mascota</label>
-                    <select name="tipo_mascota" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2">
-                        <option>Perro</option>
-                        <option>Gato</option>
-                        <option>Ave</option>
-                        <option>Otro</option>
+                    <select name="tipo_mascota" id="tipo_mascota" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2">
+                        <option value="">-- Seleccionar --</option>
+                        <option value="Perro">Perro</option>
+                        <option value="Gato">Gato</option>
+                        <option value="Ave">Ave</option>
+                        <option value="Otro">Otro</option>
                     </select>
                 </div>
 
@@ -86,4 +107,29 @@
         </form>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    function autoFillMascota() {
+        const select = document.getElementById('mascota_select');
+        const nombreInput = document.getElementById('nombre_mascota');
+        const tipoInput = document.getElementById('tipo_mascota');
+        
+        const selectedOption = select.options[select.selectedIndex];
+        
+        if (selectedOption.value) {
+            nombreInput.value = selectedOption.getAttribute('data-nombre');
+            tipoInput.value = selectedOption.getAttribute('data-tipo');
+            // Opcional: Deshabilitar campos para evitar edición conflictiva
+            // nombreInput.readOnly = true;
+            // tipoInput.disabled = true; 
+        } else {
+            nombreInput.value = '';
+            tipoInput.value = '';
+            // nombreInput.readOnly = false;
+            // tipoInput.disabled = false;
+        }
+    }
+</script>
 @endsection

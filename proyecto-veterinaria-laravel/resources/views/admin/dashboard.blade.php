@@ -132,6 +132,30 @@
                             <p class="text-sm text-gray-600">Ver y administrar tienda</p>
                         </div>
                     </a>
+
+                    <a href="{{ route('mascotas.create') }}"
+                        class="flex items-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition">
+                        <svg class="w-10 h-10 text-pink-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        <div>
+                            <p class="font-bold text-gray-900">Registrar Mascota</p>
+                            <p class="text-sm text-gray-600">Asignar a Usuario</p>
+                        </div>
+                    </a>
+
+                    <a href="{{ route('admin.mascotas') }}"
+                        class="flex items-center p-4 bg-teal-50 rounded-lg hover:bg-teal-100 transition">
+                        <svg class="w-10 h-10 text-teal-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <div>
+                            <p class="font-bold text-gray-900">Historial Médico</p>
+                            <p class="text-sm text-gray-600">Ver todas las mascotas</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

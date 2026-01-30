@@ -13,20 +13,35 @@ class Cita extends Model
 
     protected $fillable = [
         'usuario_id',
+        'mascota_id',
+        'veterinario_id',
         'nombre_dueno',
         'email',
         'telefono',
-        'nombre_mascota',
+        'nombre_mascota', // Se mantiene por legacy o si no tiene mascota registrada
         'tipo_mascota',
         'tipo_servicio',
         'fecha_preferida',
         'hora_preferida',
         'notas',
-        'estado' // pendiente, confirmado, completado
+        'estado',
+        'diagnostico',
+        'tratamiento',
+        'notas_internas'
     ];
 
     public function usuario()
     {
         return $this->belongsTo(Usuario::class);
+    }
+
+    public function mascota()
+    {
+        return $this->belongsTo(Mascota::class);
+    }
+
+    public function veterinario()
+    {
+        return $this->belongsTo(Usuario::class, 'veterinario_id');
     }
 }

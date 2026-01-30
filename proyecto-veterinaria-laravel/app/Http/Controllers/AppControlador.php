@@ -12,7 +12,8 @@ class AppControlador extends Controller
     // Citas
     public function crearCita()
     {
-        return view('citas.crear');
+        $mascotas = Auth::check() ? Auth::user()->mascotas : [];
+        return view('citas.crear', compact('mascotas'));
     }
 
     public function guardarCita(Request $request)
@@ -22,8 +23,9 @@ class AppControlador extends Controller
             'nombre_dueno' => 'required',
             'email' => 'required|email',
             'telefono' => 'required',
-            'nombre_mascota' => 'required',
-            'tipo_mascota' => 'required',
+            'nombre_mascota' => 'nullable|required_without:mascota_id',
+            'mascota_id' => 'nullable|exists:mascotas,id',
+            'tipo_mascota' => 'nullable|required_without:mascota_id',
             'tipo_servicio' => 'required',
             'fecha_preferida' => 'required|date',
             'hora_preferida' => 'required',
@@ -32,6 +34,15 @@ class AppControlador extends Controller
 
         if (Auth::check()) {
             $datos['usuario_id'] = Auth::id();
+        }
+
+        // Si selecciona mascota, rellenar datos automáticos si faltan
+        if (!empty($datos['mascota_id'])) {
+            $mascota = \App\Models\Mascota::find($datos['mascota_id']);
+            if ($mascota) {
+                $datos['nombre_mascota'] = $mascota->nombre;
+                $datos['tipo_mascota'] = $mascota->tipo;
+            }
         }
 
         Cita::create($datos);

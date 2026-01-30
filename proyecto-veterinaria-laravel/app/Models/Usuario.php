@@ -23,7 +23,7 @@ class Usuario extends Authenticatable
         'nombre',
         'email',
         'contrasena',
-        'es_admin',
+        'role',
     ];
 
     /**
@@ -46,17 +46,28 @@ class Usuario extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'contrasena' => 'hashed',
-            'es_admin' => 'boolean',
         ];
     }
     
-    // Sobreescribir para usar 'contrasena' en lugar de 'password' si es necesario por Laravel Auth,
-    // pero Laravel espera 'password' por defecto. Para mantenerlo simple, usaremos 'password' en la DB
-    // O configuraremos el modelo.
-    // Para simplificar al maximo, mantengamos los nombres estandar de laravel internamente si es posible,
-    // o cambiemos todo. El usuario pidio "todo en español".
     public function getAuthPassword()
     {
         return $this->contrasena;
+    }
+
+    // Relaciones
+    public function mascotas()
+    {
+        return $this->hasMany(Mascota::class, 'usuario_id');
+    }
+
+    // Helpers de Rol
+    public function esAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function esVeterinario()
+    {
+        return $this->role === 'veterinario';
     }
 }

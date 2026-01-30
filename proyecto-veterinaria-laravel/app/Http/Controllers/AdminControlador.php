@@ -124,4 +124,47 @@ class AdminControlador extends Controller
         $producto->delete();
         return redirect()->route('admin.productos')->with('exito', 'Producto eliminado correctamente');
     }
+
+    // ========== GESTIÓN DE MASCOTAS (HISTORIAL) ==========
+    public function mascotas(Request $request)
+    {
+        $query = \App\Models\Mascota::with('dueno');
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where('nombre', 'like', "%{$search}%")
+                  ->orWhereHas('dueno', function($q) use ($search) {
+                      $q->where('nombre', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                  });
+        }
+
+        $mascotas = $query->orderBy('created_at', 'desc')->paginate(10);
+        return view('admin.mascotas.index', compact('mascotas'));
+    }
+
+    public function verMascota($id)
+    {
+        $mascota = \App\Models\Mascota::with(['dueno', 'historial.usuario'])->findOrFail($id);
+        return view('admin.mascotas.show', compact('mascota'));
+    }
+
+    public function guardarHistorial(Request $request, $id)
+    {
+        $request->validate([
+            'tipo' => 'required|string',
+            'descripcion' => 'required|string',
+            'fecha' => 'required|date',
+        ]);
+
+        \App\Models\HistorialMedico::create([
+            'mascota_id' => $id,
+            'usuario_id' => auth()->id(),
+            'tipo' => $request->tipo,
+            'descripcion' => $request->descripcion,
+            'fecha' => $request->fecha,
+        ]);
+
+        return back()->with('exito', 'Evento médico agregado al historial.');
+    }
 }
