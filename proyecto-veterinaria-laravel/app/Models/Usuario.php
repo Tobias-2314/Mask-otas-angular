@@ -24,6 +24,7 @@ class Usuario extends Authenticatable
         'email',
         'contrasena',
         'role',
+        'foto_perfil',
     ];
 
     /**
@@ -69,5 +70,10 @@ class Usuario extends Authenticatable
     public function esVeterinario()
     {
         return $this->role === 'veterinario';
+    }
+
+    public function citas()
+    {
+        return $this->hasMany(Cita::class, 'usuario_id');
     }
 }

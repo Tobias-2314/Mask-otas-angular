@@ -36,6 +36,10 @@ Route::post('/citas', [AppControlador::class, 'guardarCita'])->name('citas.guard
 Route::get('/resenas', [AppControlador::class, 'verResenas'])->name('resenas.index');
 Route::post('/resenas', [AppControlador::class, 'guardarResena'])->name('resenas.guardar')->middleware('auth');
 
+// Mi Cuenta
+Route::get('/mi-cuenta', [AppControlador::class, 'miCuenta'])->name('mi-cuenta')->middleware('auth');
+Route::put('/mi-cuenta', [AppControlador::class, 'actualizarPerfil'])->name('mi-cuenta.actualizar')->middleware('auth');
+
 // ========== PANEL DE ADMINISTRACIÓN ==========
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard principal

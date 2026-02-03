@@ -69,4 +69,42 @@ class AppControlador extends Controller
         Resena::create($datos);
         return back()->with('exito', 'Reseña publicada.');
     }
+
+    public function miCuenta()
+    {
+        $usuario = Auth::user();
+        // Cargar citas y mascotas
+        $mascotas = $usuario->mascotas;
+        $citas = $usuario->citas()->latest()->get();
+
+        return view('usuario.mi-cuenta', compact('usuario', 'mascotas', 'citas'));
+    }
+
+    public function actualizarPerfil(Request $request)
+    {
+        $usuario = Auth::user();
+
+        $dados = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|email|unique:usuarios,email,' . $usuario->id,
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        $usuario->nombre = $dados['nombre'];
+        $usuario->email = $dados['email'];
+
+        if ($request->hasFile('foto')) {
+            // Eliminar foto anterior si existe
+            if ($usuario->foto_perfil && \Illuminate\Support\Facades\Storage::exists('public/' . $usuario->foto_perfil)) {
+                \Illuminate\Support\Facades\Storage::delete('public/' . $usuario->foto_perfil);
+            }
+            
+            $path = $request->file('foto')->store('perfiles', 'public');
+            $usuario->foto_perfil = $path;
+        }
+
+        $usuario->save();
+
+        return back()->with('exito', 'Perfil actualizado correctamente.');
+    }
 }

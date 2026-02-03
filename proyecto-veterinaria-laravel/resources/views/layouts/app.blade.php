@@ -58,7 +58,11 @@
                             🩺 Veterinario
                         </a>
                     @endif
-                    <span class="text-sm font-semibold text-gray-700">Hola, {{ Auth::user()->nombre }}</span>
+                    
+                    <a href="{{ route('mi-cuenta') }}" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-semibold transition">
+                        <i class="fas fa-user-circle text-indigo-600"></i>
+                        <span>{{ Auth::user()->nombre }}</span>
+                    </a>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit"
