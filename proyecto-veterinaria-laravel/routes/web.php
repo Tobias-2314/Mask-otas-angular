@@ -8,6 +8,8 @@ use App\Http\Controllers\ShopController;
 
 // Páginas Estáticas (Directas a Vista)
 Route::view('/', 'inicio')->name('inicio');
+Route::get('/', [AppControlador::class, 'inicio'])->name('inicio');
+Route::get('/api/ultimas-resenas', [AppControlador::class, 'ultimasResenas'])->name('api.resenas.latest');
 Route::view('/servicios', 'servicios')->name('servicios');
 Route::view('/contacto', 'contacto')->name('contacto');
 
@@ -88,6 +90,6 @@ use App\Http\Controllers\ChatbotControlador;
 
 // Ruta del chatbot (POST)
 Route::post('/api/chat', [ChatbotControlador::class, 'chat'])->name('chatbot.chat');
-Route::get('/test-chat', function() {
+Route::get('/test-chat', function () {
     return response()->json(['test' => 'ok']);
 });

@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\Auth;
 
 class AppControlador extends Controller
 {
+    public function inicio()
+    {
+        // Obtener últimas 3 reseñas aprobadas para la home
+        $resenas = Resena::where('aprobado', true)->latest()->take(3)->with('usuario')->get();
+        return view('inicio', compact('resenas'));
+    }
+
+    public function ultimasResenas()
+    {
+        $resenas = Resena::where('aprobado', true)->latest()->take(3)->with('usuario')->get();
+        return response()->json($resenas);
+    }
+
     // Citas
     public function crearCita()
     {
@@ -66,7 +79,16 @@ class AppControlador extends Controller
         $datos['usuario_id'] = Auth::id();
         $datos['aprobado'] = true;
 
-        Resena::create($datos);
+        $resena = Resena::create($datos);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Reseña publicada con éxito.',
+                'resena' => $resena->load('usuario')
+            ]);
+        }
+
         return back()->with('exito', 'Reseña publicada.');
     }
 
@@ -98,7 +120,7 @@ class AppControlador extends Controller
             if ($usuario->foto_perfil && \Illuminate\Support\Facades\Storage::exists('public/' . $usuario->foto_perfil)) {
                 \Illuminate\Support\Facades\Storage::delete('public/' . $usuario->foto_perfil);
             }
-            
+
             $path = $request->file('foto')->store('perfiles', 'public');
             $usuario->foto_perfil = $path;
         }

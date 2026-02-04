@@ -18,19 +18,23 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-indigo-600 text-white p-3 rounded-lg font-bold shadow-lg transition">
+        Saltar al contenido principal
+    </a>
 
     <!-- Navbar -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
+    <nav class="bg-white shadow-md sticky top-0 z-50" aria-label="Navegación principal">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="{{ url('/') }}" class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
-                <i class="fas fa-paw"></i> MASK!OTAS
+            <a href="{{ url('/') }}" class="text-2xl font-bold text-indigo-600 flex items-center gap-2" aria-label="MASK!OTAS - Ir al inicio">
+                <i class="fas fa-paw" aria-hidden="true"></i> MASK!OTAS
             </a>
 
+            <!-- Desktop Menu -->
             <div class="hidden md:flex space-x-8 items-center font-medium text-gray-600">
-                <a href="{{ url('/') }}" class="hover:text-indigo-600 transition">Inicio</a>
-                <a href="{{ route('tienda') }}" class="hover:text-indigo-600 transition">Tienda</a>
-                <a href="{{ route('cart.show') }}" class="hover:text-indigo-600 transition flex items-center">
-                    <i class="fas fa-shopping-cart mr-1"></i> Carrito
+                <a href="{{ url('/') }}" class="hover:text-indigo-600 transition" aria-current="{{ request()->is('/') ? 'page' : 'false' }}">Inicio</a>
+                <a href="{{ route('tienda') }}" class="hover:text-indigo-600 transition" aria-current="{{ request()->routeIs('tienda') ? 'page' : 'false' }}">Tienda</a>
+                <a href="{{ route('cart.show') }}" class="hover:text-indigo-600 transition flex items-center" aria-label="Carrito de compras">
+                    <i class="fas fa-shopping-cart mr-1" aria-hidden="true"></i> Carrito
                     @if(session('cart'))
                         <span class="ml-1 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                             {{ count(session('cart')) }}
@@ -43,7 +47,7 @@
                 <a href="{{ url('/contacto') }}" class="hover:text-indigo-600 transition">Contacto</a>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="hidden md:flex items-center gap-4">
                 @auth
                     @if(Auth::user()->role === 'admin' || Auth::user()->es_admin)
                         <a href="{{ route('admin.dashboard') }}"
@@ -59,8 +63,8 @@
                         </a>
                     @endif
                     
-                    <a href="{{ route('mi-cuenta') }}" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-semibold transition">
-                        <i class="fas fa-user-circle text-indigo-600"></i>
+                    <a href="{{ route('mi-cuenta') }}" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-semibold transition" aria-label="Mi cuenta">
+                        <i class="fas fa-user-circle text-indigo-600" aria-hidden="true"></i>
                         <span>{{ Auth::user()->nombre }}</span>
                     </a>
                     <form action="{{ route('logout') }}" method="POST">
@@ -78,11 +82,45 @@
                     </a>
                 @endauth
             </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-btn" type="button" class="text-gray-600 hover:text-indigo-600 focus:outline-none focus:text-indigo-600" aria-label="Abrir menú de navegación">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 pb-4">
+            <div class="flex flex-col space-y-2 px-6 pt-4">
+                <a href="{{ url('/') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Inicio</a>
+                <a href="{{ route('tienda') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Tienda</a>
+                <a href="{{ route('cart.show') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Carrito @if(session('cart')) ({{ count(session('cart')) }}) @endif</a>
+                <a href="{{ url('/servicios') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Servicios</a>
+                <a href="{{ url('/citas/crear') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Citas</a>
+                <a href="{{ url('/resenas') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Reseñas</a>
+                <a href="{{ url('/contacto') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Contacto</a>
+                <div class="border-t border-gray-100 pt-2 mt-2">
+                    @auth
+                        <a href="{{ route('mi-cuenta') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Mi Cuenta</a>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="block w-full text-left py-2 text-red-500 font-medium">Salir</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="block py-2 text-indigo-600 font-bold">Ingresar</a>
+                        <a href="{{ route('registro') }}" class="block py-2 text-indigo-600 font-bold">Registrarse</a>
+                    @endauth
+                </div>
+            </div>
         </div>
     </nav>
 
     <!-- Contenido Principal -->
-    <main class="flex-grow">
+    <main class="flex-grow" id="main-content">
         @if(session('exito'))
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 container mx-auto mt-4" role="alert">
                 <p class="font-bold">¡Éxito!</p>
@@ -122,8 +160,8 @@
 
     <!-- Chatbot Flotante -->
     <div id="chatbot-button" class="fixed bottom-6 right-6 z-50">
-        <button class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110" aria-label="Abrir asistente virtual">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
             </svg>
         </button>
@@ -157,6 +195,7 @@
         <!-- Input -->
         <form id="chatbot-form" class="border-t border-gray-200 p-4 bg-white">
             <div class="flex space-x-2">
+                <label for="chatbot-input" class="sr-only">Escribe tu mensaje</label>
                 <input 
                     type="text" 
                     id="chatbot-input" 
@@ -174,8 +213,20 @@
         </form>
     </div>
 
-    <!-- Script del Chatbot -->
+    <!-- Script del Chatbot y Mobile Menu -->
     <script src="{{ asset('js/chatbot.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+
+            if (btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
 
 </body>
 
