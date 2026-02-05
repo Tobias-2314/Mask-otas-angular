@@ -58,11 +58,16 @@
                                     </select>
                                 </form>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <td class="px-6 py-4 whitespace-nowrap flex items-center gap-2">
+                                <a href="{{ route('admin.citas.editar', $cita->id) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold text-sm" title="Editar Información Clínica">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
                                 <form action="{{ route('admin.citas.eliminar', $cita->id) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de eliminar esta cita?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 font-semibold">Eliminar</button>
+                                    <button type="submit" class="text-red-600 hover:text-red-900 font-semibold text-sm" title="Eliminar Cita">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </form>
                             </td>
                         </tr>

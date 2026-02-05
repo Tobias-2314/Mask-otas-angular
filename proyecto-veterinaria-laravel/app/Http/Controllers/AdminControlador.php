@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Usuario;
 use App\Models\Cita;
 use App\Models\Resena;
+use Illuminate\Support\Facades\Hash;
 
 class AdminControlador extends Controller
 {
@@ -34,6 +35,30 @@ class AdminControlador extends Controller
         return redirect()->route('admin.usuarios')->with('exito', 'Usuario eliminado correctamente');
     }
 
+    public function crearUsuario()
+    {
+        return view('admin.usuarios-crear');
+    }
+
+    public function guardarUsuario(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|email|unique:usuarios,email',
+            'password' => 'required|string|min:6',
+            'role' => 'required|in:usuario,admin,veterinario',
+        ]);
+
+        Usuario::create([
+            'nombre' => $request->nombre,
+            'email' => $request->email,
+            'contrasena' => Hash::make($request->password),
+            'role' => $request->role,
+        ]);
+
+        return redirect()->route('admin.usuarios')->with('exito', 'Usuario creado correctamente');
+    }
+
     // ========== GESTIÓN DE CITAS ==========
     public function citas()
     {
@@ -55,6 +80,40 @@ class AdminControlador extends Controller
         $cita = Cita::findOrFail($id);
         $cita->delete();
         return redirect()->route('admin.citas')->with('exito', 'Cita eliminada correctamente');
+    }
+
+    public function editarCita($id)
+    {
+        $cita = Cita::with(['usuario', 'mascota'])->findOrFail($id);
+        return view('admin.citas-editar', compact('cita'));
+    }
+
+    public function actualizarCita(Request $request, $id)
+    {
+        $cita = Cita::findOrFail($id);
+        
+        $request->validate([
+            'diagnostico' => 'nullable|string',
+            'tratamiento' => 'nullable|string',
+            'notas_internas' => 'nullable|string',
+        ]);
+
+        $cita->diagnostico = $request->diagnostico;
+        $cita->tratamiento = $request->tratamiento;
+        $cita->notas_internas = $request->notas_internas;
+        
+        // Asignar veterinario actual como el responsable (admin o vet logueado)
+        $cita->veterinario_id = auth()->id();
+        
+        // Si se añade diagnóstico, marcar como completada si estaba confirmada
+        if ($request->filled('diagnostico') && $cita->estado === 'confirmada') {
+            // Opcional: cambiar estado, por ahora lo dejamos a elección manual o lógica futura
+            // $cita->estado = 'completada'; // Si existiera ese estado
+        }
+
+        $cita->save();
+
+        return redirect()->route('admin.citas')->with('exito', 'Información clínica actualizada correctamente.');
     }
 
     // ========== GESTIÓN DE RESEÑAS ==========

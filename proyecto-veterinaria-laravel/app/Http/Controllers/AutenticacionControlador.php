@@ -22,6 +22,15 @@ class AutenticacionControlador extends Controller
         
         if (Auth::attempt($credenciales)) {
             $request->session()->regenerate();
+
+            $usuario = Auth::user();
+
+            if ($usuario->esAdmin()) {
+                return redirect()->route('admin.dashboard');
+            } elseif ($usuario->esVeterinario()) {
+                return redirect()->route('veterinario.index');
+            }
+            
             return redirect('/');
         }
         return back()->withErrors(['email' => 'Datos incorrectos.']);

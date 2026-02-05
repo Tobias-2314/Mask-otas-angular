@@ -33,14 +33,7 @@
             <div class="hidden md:flex space-x-8 items-center font-medium text-gray-600">
                 <a href="{{ url('/') }}" class="hover:text-indigo-600 transition" aria-current="{{ request()->is('/') ? 'page' : 'false' }}">Inicio</a>
                 <a href="{{ route('tienda') }}" class="hover:text-indigo-600 transition" aria-current="{{ request()->routeIs('tienda') ? 'page' : 'false' }}">Tienda</a>
-                <a href="{{ route('cart.show') }}" class="hover:text-indigo-600 transition flex items-center" aria-label="Carrito de compras">
-                    <i class="fas fa-shopping-cart mr-1" aria-hidden="true"></i> Carrito
-                    @if(session('cart'))
-                        <span class="ml-1 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                            {{ count(session('cart')) }}
-                        </span>
-                    @endif
-                </a>
+
                 <a href="{{ url('/servicios') }}" class="hover:text-indigo-600 transition">Servicios</a>
                 <a href="{{ url('/citas/crear') }}" class="hover:text-indigo-600 transition">Citas</a>
                 <a href="{{ url('/resenas') }}" class="hover:text-indigo-600 transition">Reseñas</a>
@@ -48,6 +41,16 @@
             </div>
 
             <div class="hidden md:flex items-center gap-4">
+                @if(request()->routeIs('tienda') || request()->routeIs('cart.*'))
+                <a href="{{ route('cart.show') }}" class="relative text-gray-600 hover:text-indigo-600 transition p-2" aria-label="Carrito de compras">
+                    <i class="fas fa-shopping-cart text-xl" aria-hidden="true"></i>
+                    @if(session('cart'))
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+                            {{ count(session('cart')) }}
+                        </span>
+                    @endif
+                </a>
+                @endif
                 @auth
                     @if(Auth::user()->role === 'admin' || Auth::user()->es_admin)
                         <a href="{{ route('admin.dashboard') }}"
@@ -98,7 +101,9 @@
             <div class="flex flex-col space-y-2 px-6 pt-4">
                 <a href="{{ url('/') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Inicio</a>
                 <a href="{{ route('tienda') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Tienda</a>
+                @if(request()->routeIs('tienda') || request()->routeIs('cart.*'))
                 <a href="{{ route('cart.show') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Carrito @if(session('cart')) ({{ count(session('cart')) }}) @endif</a>
+                @endif
                 <a href="{{ url('/servicios') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Servicios</a>
                 <a href="{{ url('/citas/crear') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Citas</a>
                 <a href="{{ url('/resenas') }}" class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Reseñas</a>
@@ -228,6 +233,7 @@
         });
     </script>
 
+    @yield('scripts')
 </body>
 
 </html>

@@ -25,8 +25,18 @@ class AppControlador extends Controller
     // Citas
     public function crearCita()
     {
-        $mascotas = Auth::check() ? Auth::user()->mascotas : [];
+        $mascotas = Auth::user()->mascotas;
         return view('citas.crear', compact('mascotas'));
+    }
+
+    public function obtenerCitasOcupadas()
+    {
+        // Obtener citas futuras (o de hoy en adelante) para bloquear en el calendario
+        $citas = Cita::where('fecha_preferida', '>=', now()->toDateString())
+                     ->whereIn('estado', ['pendiente', 'confirmada']) // Ignorar canceladas
+                     ->get(['fecha_preferida', 'hora_preferida']);
+        
+        return response()->json($citas);
     }
 
     public function guardarCita(Request $request)
@@ -40,14 +50,22 @@ class AppControlador extends Controller
             'mascota_id' => 'nullable|exists:mascotas,id',
             'tipo_mascota' => 'nullable|required_without:mascota_id',
             'tipo_servicio' => 'required',
-            'fecha_preferida' => 'required|date',
+            'fecha_preferida' => 'required|date|after_or_equal:today',
             'hora_preferida' => 'required',
             'notas' => 'nullable',
         ]);
 
-        if (Auth::check()) {
-            $datos['usuario_id'] = Auth::id();
+        // VERIFICAR DISPONIBILIDAD
+        $existeCita = Cita::where('fecha_preferida', $datos['fecha_preferida'])
+                          ->where('hora_preferida', $datos['hora_preferida'])
+                          ->whereIn('estado', ['pendiente', 'confirmada'])
+                          ->exists();
+
+        if ($existeCita) {
+            return back()->withInput()->withErrors(['hora_preferida' => 'Este horario ya está reservado. Por favor elige otro.']);
         }
+
+        $datos['usuario_id'] = Auth::id();
 
         // Si selecciona mascota, rellenar datos automáticos si faltan
         if (!empty($datos['mascota_id'])) {

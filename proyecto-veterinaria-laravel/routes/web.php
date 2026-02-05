@@ -5,6 +5,7 @@ use App\Http\Controllers\AutenticacionControlador;
 use App\Http\Controllers\AppControlador;
 use App\Http\Controllers\AdminControlador;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\ChatbotControlador;
 
 // Páginas Estáticas (Directas a Vista)
 Route::view('/', 'inicio')->name('inicio');
@@ -31,8 +32,9 @@ Route::post('/registro', [AutenticacionControlador::class, 'registro'])->name('r
 Route::post('/logout', [AutenticacionControlador::class, 'logout'])->name('logout');
 
 // Citas
-Route::get('/citas/crear', [AppControlador::class, 'crearCita'])->name('citas.crear');
-Route::post('/citas', [AppControlador::class, 'guardarCita'])->name('citas.guardar');
+Route::get('/citas/crear', [AppControlador::class, 'crearCita'])->name('citas.crear')->middleware('auth');
+Route::post('/citas', [AppControlador::class, 'guardarCita'])->name('citas.guardar')->middleware('auth');
+Route::get('/api/citas/ocupadas', [AppControlador::class, 'obtenerCitasOcupadas'])->name('citas.ocupadas');
 
 // Reseñas
 Route::get('/resenas', [AppControlador::class, 'verResenas'])->name('resenas.index');
@@ -49,12 +51,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Gestión de Usuarios
     Route::get('/usuarios', [AdminControlador::class, 'usuarios'])->name('usuarios');
+    Route::get('/usuarios/crear', [AdminControlador::class, 'crearUsuario'])->name('usuarios.crear');
+    Route::post('/usuarios', [AdminControlador::class, 'guardarUsuario'])->name('usuarios.guardar');
     Route::delete('/usuarios/{id}', [AdminControlador::class, 'eliminarUsuario'])->name('usuarios.eliminar');
 
     // Gestión de Citas
     Route::get('/citas', [AdminControlador::class, 'citas'])->name('citas');
     Route::patch('/citas/{id}/estado', [AdminControlador::class, 'actualizarEstadoCita'])->name('citas.estado');
     Route::delete('/citas/{id}', [AdminControlador::class, 'eliminarCita'])->name('citas.eliminar');
+    Route::get('/citas/{id}/editar', [AdminControlador::class, 'editarCita'])->name('citas.editar');
+    Route::put('/citas/{id}', [AdminControlador::class, 'actualizarCita'])->name('citas.actualizar');
 
     // Gestión de Reseñas
     Route::get('/resenas', [AdminControlador::class, 'resenas'])->name('resenas');
@@ -86,7 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/veterinario/citas/{id}', [App\Http\Controllers\VeterinarioController::class, 'show'])->name('veterinario.show');
     Route::patch('/veterinario/citas/{id}', [App\Http\Controllers\VeterinarioController::class, 'update'])->name('veterinario.update');
 });
-use App\Http\Controllers\ChatbotControlador;
+
 
 // Ruta del chatbot (POST)
 Route::post('/api/chat', [ChatbotControlador::class, 'chat'])->name('chatbot.chat');

@@ -130,7 +130,8 @@
                                     <th class="px-4 py-3 rounded-l-lg">Fecha</th>
                                     <th class="px-4 py-3">Mascota</th>
                                     <th class="px-4 py-3">Servicio</th>
-                                    <th class="px-4 py-3 rounded-r-lg text-right">Estado</th>
+                                    <th class="px-4 py-3 text-right">Estado</th>
+                                    <th class="px-4 py-3 rounded-r-lg"></th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
@@ -167,6 +168,14 @@
                                             </span>
                                         @endif
                                     </td>
+                                    <td class="px-4 py-3 text-right">
+                                        @if($cita->diagnostico || $cita->tratamiento)
+                                            <button onclick="verHistorial('{{ addslashes($cita->diagnostico) }}', '{{ addslashes($cita->tratamiento) }}', '{{ $cita->veterinario ? addslashes($cita->veterinario->nombre) : 'N/A' }}')" 
+                                                class="text-teal-600 hover:text-teal-800 font-bold text-xs underline cursor-pointer">
+                                                Ver Informe
+                                            </button>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -179,3 +188,75 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+<script>
+    function verHistorial(diagnostico, tratamiento, veterinario) {
+        document.getElementById('modal-diagnostico').textContent = diagnostico || 'Sin diagnóstico registrado.';
+        document.getElementById('modal-tratamiento').textContent = tratamiento || 'Sin tratamiento registrado.';
+        document.getElementById('modal-veterinario').textContent = veterinario || 'No asignado';
+        
+        document.getElementById('historial-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarModal() {
+        document.getElementById('historial-modal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Cerrar al hacer click fuera
+    window.onclick = function(event) {
+        const modal = document.getElementById('historial-modal');
+        if (event.target == modal) {
+            cerrarModal();
+        }
+    }
+</script>
+@endsection
+
+<!-- Modal Historial Clínico -->
+<div id="historial-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="cerrarModal()"></div>
+
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-teal-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <i class="fas fa-notes-medical text-teal-600"></i>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                            Historial Clínico
+                        </h3>
+                        <div class="mt-4 space-y-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Diagnóstico</h4>
+                                <div class="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-100 text-gray-700 text-sm" id="modal-diagnostico"></div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Tratamiento</h4>
+                                <div class="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-100 text-gray-700 text-sm" id="modal-tratamiento"></div>
+                            </div>
+
+                            <div class="border-t border-gray-100 pt-3 mt-3">
+                                <p class="text-xs text-gray-500">Atendido por: <span class="font-medium text-gray-700" id="modal-veterinario"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:ml-3 sm:w-auto sm:text-sm" onclick="cerrarModal()">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

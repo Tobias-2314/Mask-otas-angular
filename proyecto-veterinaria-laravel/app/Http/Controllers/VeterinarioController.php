@@ -11,6 +11,10 @@ class VeterinarioController extends Controller
     // Dashboard: Ver próximas citas
     public function index()
     {
+        if (!Auth::user()->esVeterinario()) {
+            return redirect('/')->with('error', 'Acceso denegado. Área exclusiva para veterinarios.');
+        }
+
         // Mostrar citas pendientes o confirmadas, ordenadas por fecha
         $citas = Cita::whereIn('estado', ['pendiente', 'confirmado'])
                      ->orderBy('fecha_preferida', 'asc')
@@ -22,6 +26,10 @@ class VeterinarioController extends Controller
     // Ver detalle de cita y formulario médico
     public function show($id)
     {
+        if (!Auth::user()->esVeterinario()) {
+            return redirect('/')->with('error', 'Acceso denegado.');
+        }
+
         $cita = Cita::with(['usuario', 'mascota'])->findOrFail($id);
         return view('veterinario.show', compact('cita'));
     }
@@ -29,6 +37,10 @@ class VeterinarioController extends Controller
     // Actualizar diagnóstico y tratamiento
     public function update(Request $request, $id)
     {
+        if (!Auth::user()->esVeterinario()) {
+            return back()->with('error', 'Acceso denegado.');
+        }
+
         $cita = Cita::findOrFail($id);
 
         $datos = $request->validate([

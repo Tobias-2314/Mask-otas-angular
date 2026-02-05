@@ -9,9 +9,14 @@
                 <h1 class="text-4xl font-bold text-gray-900">Gestión de Usuarios</h1>
                 <p class="text-gray-600 mt-2">Total: {{ $usuarios->total() }} usuarios</p>
             </div>
-            <a href="{{ route('admin.dashboard') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition">
-                ← Volver al Dashboard
-            </a>
+            <div class="flex gap-4">
+                <a href="{{ route('admin.usuarios.crear') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                    + Crear Usuario
+                </a>
+                <a href="{{ route('admin.dashboard') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                    ← Volver al Dashboard
+                </a>
+            </div>
         </div>
 
         @if(session('exito'))
@@ -40,8 +45,10 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $usuario->nombre }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $usuario->email }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @if($usuario->es_admin)
+                                @if($usuario->esAdmin())
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">Admin</span>
+                                @elseif($usuario->esVeterinario())
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Veterinario</span>
                                 @else
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Usuario</span>
                                 @endif
