@@ -13,6 +13,9 @@ Route::get('/', [AppControlador::class, 'inicio'])->name('inicio');
 Route::get('/api/ultimas-resenas', [AppControlador::class, 'ultimasResenas'])->name('api.resenas.latest');
 Route::view('/servicios', 'servicios')->name('servicios');
 Route::view('/contacto', 'contacto')->name('contacto');
+Route::view('/politica-privacidad', 'politica-privacidad')->name('politica-privacidad');
+Route::view('/politica-cookies', 'politica-cookies')->name('politica-cookies');
+Route::view('/terminos-servicio', 'terminos-servicio')->name('terminos-servicio');
 
 // Tienda
 Route::get('/tienda', [ShopController::class, 'index'])->name('tienda');
