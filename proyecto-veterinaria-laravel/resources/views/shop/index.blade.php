@@ -74,7 +74,7 @@
                                     </div>
                                 @endif
                                 <div
-                                    class="absolute top-0 right-0 m-4 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                                    class="absolute top-0 right-0 m-4 bg-indigo-600 shop-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
                                     Nuevo
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                 <p class="text-gray-600 mb-4 flex-grow text-sm">{{ Str::limit($product->description, 80) }}</p>
 
                                 <div class="flex items-center justify-between mt-auto">
-                                    <span class="text-2xl font-bold text-indigo-600">{{ number_format($product->price, 2) }}
+                                    <span class="text-2xl font-bold text-indigo-600 shop-price">{{ number_format($product->price, 2) }}
                                         €</span>
 
                                     <form action="{{ route('cart.add', $product->id) }}" method="POST">

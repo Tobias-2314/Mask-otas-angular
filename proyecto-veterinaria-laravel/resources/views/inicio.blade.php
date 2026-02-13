@@ -27,7 +27,7 @@
             <!-- Placeholder Image -->
             <div class="md:w-1/2 mt-12 md:mt-0 relative">
                 <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-6 shadow-2xl transform rotate-3">
-                    <img src="{{ asset('images/hero_mascota.png') }}"
+                    <img src="{{ $site_settings['hero_image'] ?? asset('images/hero_mascota.png') }}"
                         alt="Perro golden retriever y gato naranja recibiendo atención veterinaria en una clínica moderna"
                         class="rounded-2xl w-full h-80 object-cover shadow-lg">
                 </div>
@@ -146,24 +146,24 @@
                                     const inicial = nombreUsuario.charAt(0);
 
                                     const cardHtml = `
-                                        <div class="bg-white p-6 rounded-2xl shadow-xl shadow-indigo-100/50 border border-gray-100 transform hover:-translate-y-1 transition duration-300">
-                                            <div class="flex items-center mb-4">
-                                                <div class="flex text-yellow-400 text-sm">
-                                                    ${starsHtml}
+                                            <div class="bg-white p-6 rounded-2xl shadow-xl shadow-indigo-100/50 border border-gray-100 transform hover:-translate-y-1 transition duration-300">
+                                                <div class="flex items-center mb-4">
+                                                    <div class="flex text-yellow-400 text-sm">
+                                                        ${starsHtml}
+                                                    </div>
+                                                </div>
+                                                <p class="text-gray-600 italic mb-6 line-clamp-3">"${resena.comentario}"</p>
+                                                <div class="flex items-center gap-3 mt-auto">
+                                                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                                                        ${inicial}
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-bold text-gray-900">${nombreUsuario}</p>
+                                                        <p class="text-xs text-indigo-500 font-semibold">Hace un momento</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <p class="text-gray-600 italic mb-6 line-clamp-3">"${resena.comentario}"</p>
-                                            <div class="flex items-center gap-3 mt-auto">
-                                                <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-md">
-                                                    ${inicial}
-                                                </div>
-                                                <div>
-                                                    <p class="font-bold text-gray-900">${nombreUsuario}</p>
-                                                    <p class="text-xs text-indigo-500 font-semibold">Hace un momento</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `;
+                                        `;
                                     container.insertAdjacentHTML('beforeend', cardHtml);
                                 });
                             })

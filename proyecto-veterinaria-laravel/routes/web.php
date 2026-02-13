@@ -78,6 +78,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/mascotas', [AdminControlador::class, 'mascotas'])->name('mascotas');
     Route::get('/mascotas/{id}', [AdminControlador::class, 'verMascota'])->name('mascotas.ver');
     Route::post('/mascotas/{id}/historial', [AdminControlador::class, 'guardarHistorial'])->name('mascotas.historial');
+
+    // Gestión de Diseño
+    Route::get('/diseño', [\App\Http\Controllers\DesignController::class, 'index'])->name('design');
+    Route::post('/diseño', [\App\Http\Controllers\DesignController::class, 'update'])->name('design.update');
+    Route::delete('/diseño/logo', [\App\Http\Controllers\DesignController::class, 'deleteLogo'])->name('design.logo.delete');
 });
 
 // Mascotas (Usuario)
