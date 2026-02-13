@@ -369,8 +369,9 @@
                 <h4 class="text-xl font-bold mb-4">Enlaces Rápidos</h4>
                 <ul class="space-y-2 text-gray-400">
                     <li><a href="#" class="hover:text-indigo-400">Nuestros Doctores</a></li>
-                    <li><a href="#" class="hover:text-indigo-400">Política de Privacidad</a></li>
-                    <li><a href="#" class="hover:text-indigo-400">Términos de Servicio</a></li>
+                    <li><a href="{{ route('politica-privacidad') }}" class="hover:text-indigo-400">Política de Privacidad</a></li>
+                    <li><a href="{{ route('politica-cookies') }}" class="hover:text-indigo-400">Política de Cookies</a></li>
+                    <li><a href="{{ route('terminos-servicio') }}" class="hover:text-indigo-400">Términos de Servicio</a></li>
                 </ul>
             </div>
             <div>
@@ -459,6 +460,182 @@
             }
         });
     </script>
+
+    <!-- Banner de Cookies -->
+    <div id="cookie-banner" class="hidden opacity-0 fixed bottom-0 left-0 right-0 bg-white border-t-4 border-indigo-600 shadow-2xl z-50 transition-opacity duration-300">
+        <div class="container mx-auto px-4 py-6 md:px-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="flex-1">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-cookie-bite text-indigo-600 text-3xl mt-1"></i>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">🍪 Este sitio utiliza cookies</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Utilizamos cookies propias y de terceros para mejorar tu experiencia de navegación, analizar el uso del sitio y personalizar contenidos. 
+                                Al hacer clic en "Aceptar todo", consientes el uso de todas las cookies. Puedes gestionar tus preferencias en 
+                                <a href="{{ route('politica-cookies') }}" class="text-indigo-600 hover:underline font-semibold">Política de Cookies</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <button id="reject-all-cookies" class="px-6 py-2.5 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-100 transition text-sm whitespace-nowrap">
+                        Rechazar todo
+                    </button>
+                    <button id="configure-cookies" class="px-6 py-2.5 border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition text-sm whitespace-nowrap">
+                        Configurar
+                    </button>
+                    <button id="accept-all-cookies" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition text-sm whitespace-nowrap shadow-lg">
+                        Aceptar todo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Configuración de Cookies -->
+    <div id="cookie-modal" class="hidden opacity-0 fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-t-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-cog text-3xl"></i>
+                        <h2 class="text-2xl font-bold">Configuración de Cookies</h2>
+                    </div>
+                    <button id="close-cookie-modal" class="text-white hover:text-gray-200 transition">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <p class="mt-2 text-indigo-100 text-sm">Personaliza tus preferencias de cookies según tus necesidades</p>
+            </div>
+
+            <!-- Contenido -->
+            <div class="p-6 space-y-6">
+                <!-- Cookie Necesarias -->
+                <div class="border-b border-gray-200 pb-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-shield-alt text-green-600"></i>
+                                <h3 class="text-lg font-bold text-gray-900">Cookies Necesarias</h3>
+                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Siempre activas</span>
+                            </div>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Estas cookies son esenciales para el funcionamiento del sitio web y no pueden desactivarse. 
+                                Incluyen cookies de sesión, autenticación y seguridad.
+                            </p>
+                            <div class="mt-3 bg-gray-50 p-3 rounded-lg">
+                                <p class="text-xs text-gray-500"><strong>Ejemplos:</strong> PHPSESSID, XSRF-TOKEN, maskotas_session</p>
+                                <p class="text-xs text-gray-500 mt-1"><strong>Duración:</strong> Sesión o hasta 2 horas</p>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <div class="bg-green-100 rounded-full p-2">
+                                <i class="fas fa-check text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cookies Funcionales -->
+                <div class="border-b border-gray-200 pb-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-sliders-h text-blue-600"></i>
+                                <h3 class="text-lg font-bold text-gray-900">Cookies Funcionales</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Permiten recordar tus preferencias (idioma, región, tema) y mejorar la funcionalidad del sitio. 
+                                Sin estas cookies, algunas funciones pueden no estar disponibles.
+                            </p>
+                            <div class="mt-3 bg-gray-50 p-3 rounded-lg">
+                                <p class="text-xs text-gray-500"><strong>Ejemplos:</strong> Preferencias de idioma, tema oscuro/claro</p>
+                                <p class="text-xs text-gray-500 mt-1"><strong>Duración:</strong> Hasta 1 año</p>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="cookie-functional" class="sr-only peer">
+                                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cookies de Análisis -->
+                <div class="border-b border-gray-200 pb-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-chart-line text-purple-600"></i>
+                                <h3 class="text-lg font-bold text-gray-900">Cookies de Análisis</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Nos ayudan a entender cómo los visitantes interactúan con el sitio web, recopilando información de forma anónima. 
+                                Utilizamos Google Analytics para mejorar nuestros servicios.
+                            </p>
+                            <div class="mt-3 bg-gray-50 p-3 rounded-lg">
+                                <p class="text-xs text-gray-500"><strong>Proveedores:</strong> Google Analytics, Google Tag Manager</p>
+                                <p class="text-xs text-gray-500 mt-1"><strong>Duración:</strong> Hasta 2 años</p>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="cookie-analytics" class="sr-only peer">
+                                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cookies de Marketing -->
+                <div class="pb-2">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-bullhorn text-orange-600"></i>
+                                <h3 class="text-lg font-bold text-gray-900">Cookies de Marketing</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Se utilizan para rastrear visitantes en diferentes sitios web y mostrar anuncios relevantes. 
+                                Pueden ser establecidas por nuestros socios publicitarios.
+                            </p>
+                            <div class="mt-3 bg-gray-50 p-3 rounded-lg">
+                                <p class="text-xs text-gray-500"><strong>Proveedores:</strong> Google Ads, Facebook Pixel, LinkedIn Insight</p>
+                                <p class="text-xs text-gray-500 mt-1"><strong>Duración:</strong> Hasta 2 años</p>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="cookie-marketing" class="sr-only peer">
+                                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-orange-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-gray-50 px-6 py-4 rounded-b-2xl border-t border-gray-200">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <a href="{{ route('politica-cookies') }}" class="text-sm text-indigo-600 hover:underline font-semibold">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Más información sobre cookies
+                    </a>
+                    <div class="flex gap-3 w-full sm:w-auto">
+                        <button id="save-cookie-preferences" class="flex-1 sm:flex-none px-8 py-2.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition shadow-lg">
+                            Guardar preferencias
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Cookies -->
+    <script src="{{ asset('js/cookies.js') }}"></script>
 
     @yield('scripts')
 </body>
