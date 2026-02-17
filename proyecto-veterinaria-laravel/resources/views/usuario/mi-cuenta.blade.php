@@ -184,6 +184,70 @@
                 @endif
             </section>
 
+            <!-- Sección Historial de Pedidos -->
+            <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                 <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        <span class="bg-indigo-100 text-indigo-600 p-2 rounded-lg"><i class="fas fa-shopping-bag"></i></span>
+                        Mis Pedidos
+                    </h2>
+                    <a href="{{ route('tienda') }}" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                        Ir a la Tienda
+                    </a>
+                </div>
+
+                @if($orders->isEmpty())
+                    <div class="text-center py-8 bg-gray-50 rounded-xl">
+                        <p class="text-gray-500 text-sm">No has realizado ningún pedido aún.</p>
+                    </div>
+                @else
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-50 text-gray-500">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-l-lg">Pedido ID</th>
+                                    <th class="px-4 py-3">Fecha</th>
+                                    <th class="px-4 py-3">Total</th>
+                                    <th class="px-4 py-3 text-right">Estado</th>
+                                    <th class="px-4 py-3 rounded-r-lg"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach($orders as $order)
+                                <tr class="group hover:bg-gray-50 transition">
+                                    <td class="px-4 py-3 font-medium text-gray-900">
+                                        #{{ substr($order->id, 0, 8) }}
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-600">
+                                        {{ $order->created_at->format('d M, Y') }}
+                                    </td>
+                                    <td class="px-4 py-3 font-bold text-gray-900">
+                                        {{ $order->total }} €
+                                    </td>
+                                    <td class="px-4 py-3 text-right">
+                                        @if($order->status == 'completed')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Completado
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                {{ ucfirst($order->status) }}
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3 text-right">
+                                        <button class="text-xs text-indigo-600 font-bold hover:underline" onclick="alert('Detalles próximamente')">
+                                            Ver Detalles
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </section>
+
         </div>
     </div>
 </div>

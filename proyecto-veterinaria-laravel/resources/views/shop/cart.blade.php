@@ -216,7 +216,7 @@
 
     function handleCheckout() {
         @auth
-            openModal('success-modal');
+            window.location.href = "{{ route('checkout.create') }}";
         @else
             openModal('guest-modal');
         @endauth

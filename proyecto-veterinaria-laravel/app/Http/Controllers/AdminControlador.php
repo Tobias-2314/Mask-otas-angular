@@ -11,14 +11,43 @@ use Illuminate\Support\Facades\Hash;
 class AdminControlador extends Controller
 {
     // Dashboard principal
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $totalUsuarios = Usuario::count();
         $totalCitas = Cita::count();
         $totalResenas = Resena::count();
         $citasPendientes = Cita::where('estado', 'pendiente')->count();
 
-        return view('admin.dashboard', compact('totalUsuarios', 'totalCitas', 'totalResenas', 'citasPendientes'));
+        // --- Gráfica de Ventas ---
+        $range = $request->get('range', '30'); // Default 30 días
+        $startDate = now()->subDays($range);
+        
+        $salesData = \App\Models\Order::selectRaw('DATE(created_at) as date, SUM(total) as total')
+            ->where('created_at', '>=', $startDate)
+            ->where('status', 'completed')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Rellenar días vacíos
+        $chartLabels = [];
+        $chartData = [];
+        $currentDate = $startDate->copy();
+        
+        // Iterar desde el inicio hasta hoy
+        while ($currentDate <= now()) {
+            $formattedDate = $currentDate->format('Y-m-d');
+            $displayDate = $currentDate->format('d M');
+            
+            $daySale = $salesData->firstWhere('date', $formattedDate);
+            
+            $chartLabels[] = $displayDate;
+            $chartData[] = $daySale ? $daySale->total : 0;
+            
+            $currentDate->addDay();
+        }
+
+        return view('admin.dashboard', compact('totalUsuarios', 'totalCitas', 'totalResenas', 'citasPendientes', 'chartLabels', 'chartData', 'range'));
     }
 
     // ========== GESTIÓN DE USUARIOS ==========

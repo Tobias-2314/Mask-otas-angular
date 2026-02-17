@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Cita;
 use App\Models\Resena;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Order;
 
 class AppControlador extends Controller
 {
@@ -116,8 +117,10 @@ class AppControlador extends Controller
         // Cargar citas y mascotas
         $mascotas = $usuario->mascotas;
         $citas = $usuario->citas()->latest()->get();
+        // Cargar pedidos
+        $orders = Order::where('user_id', $usuario->id)->orderBy('created_at', 'desc')->get();
 
-        return view('usuario.mi-cuenta', compact('usuario', 'mascotas', 'citas'));
+        return view('usuario.mi-cuenta', compact('usuario', 'mascotas', 'citas', 'orders'));
     }
 
     public function actualizarPerfil(Request $request)

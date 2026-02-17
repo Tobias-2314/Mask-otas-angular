@@ -107,3 +107,10 @@ Route::post('/api/chat', [ChatbotControlador::class, 'chat'])->name('chatbot.cha
 Route::get('/test-chat', function () {
     return response()->json(['test' => 'ok']);
 });
+
+// Pedidos y Checkout
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'create'])->name('checkout.create');
+    Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
+    // La vista de pedidos ahora está en mi-cuenta
+});
