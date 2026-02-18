@@ -46,6 +46,7 @@ Route::post('/resenas', [AppControlador::class, 'guardarResena'])->name('resenas
 // Mi Cuenta
 Route::get('/mi-cuenta', [AppControlador::class, 'miCuenta'])->name('mi-cuenta')->middleware('auth');
 Route::put('/mi-cuenta', [AppControlador::class, 'actualizarPerfil'])->name('mi-cuenta.actualizar')->middleware('auth');
+Route::put('/mi-cuenta/preferencias', [AppControlador::class, 'actualizarPreferencias'])->name('mi-cuenta.preferencias')->middleware('auth');
 
 // ========== PANEL DE ADMINISTRACIÓN ==========
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

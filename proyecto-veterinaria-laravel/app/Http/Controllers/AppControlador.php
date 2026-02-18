@@ -150,4 +150,32 @@ class AppControlador extends Controller
 
         return back()->with('exito', 'Perfil actualizado correctamente.');
     }
+    public function actualizarPreferencias(Request $request)
+    {
+        $usuario = Auth::user();
+        
+        $datos = $request->validate([
+            'theme' => 'nullable|in:light,dark',
+            'font_size' => 'nullable|in:small,medium,large',
+        ]);
+
+        $config = $usuario->configuracion ?? [];
+        
+        if ($request->has('theme')) {
+            $config['theme'] = $datos['theme'];
+        }
+        
+        if ($request->has('font_size')) {
+            $config['font_size'] = $datos['font_size'];
+        }
+
+        $usuario->configuracion = $config;
+        $usuario->save();
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Preferencias actualizadas']);
+        }
+
+        return back()->with('exito', 'Preferencias actualizadas correctamente.');
+    }
 }

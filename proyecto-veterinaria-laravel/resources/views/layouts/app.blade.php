@@ -26,7 +26,12 @@
             'medium' => '16px',
             'large' => '18px',
         ];
-        $baseFontSize = $fontSizeMap[$site_settings['base_font_size'] ?? 'medium'] ?? '16px';
+        
+        $userConfig = Auth::check() ? Auth::user()->configuracion : [];
+        $userFontSize = $userConfig['font_size'] ?? null;
+        $userTheme = $userConfig['theme'] ?? 'light';
+
+        $baseFontSize = $fontSizeMap[$userFontSize ?? $site_settings['base_font_size'] ?? 'medium'] ?? '16px';
 
         $btnShape = $site_settings['button_shape'] ?? 'rounded'; // pill, square, rounded
         $btnRadius = match ($btnShape) {
@@ -53,14 +58,16 @@
             --color-secondary:
                 {{ $site_settings['secondary_color'] ?? '#10B981' }}
             ;
-            --color-bg:
-                {{ $site_settings['background_color'] ?? '#F9FAFB' }}
-            ;
-            --color-header-bg:
-                {{ $site_settings['header_bg_color'] ?? '#FFFFFF' }}
-            ;
-            --color-footer-bg:
-                {{ $site_settings['footer_bg_color'] ?? '#111827' }}
+            
+            /* Default Light Theme Variables */
+            --color-bg: {{ $site_settings['background_color'] ?? '#F9FAFB' }};
+            --color-header-bg: {{ $site_settings['header_bg_color'] ?? '#FFFFFF' }};
+            --color-footer-bg: {{ $site_settings['footer_bg_color'] ?? '#111827' }};
+            --text-color: #1f2937;
+            --card-bg: #ffffff;
+
+            --btn-text-color:
+                {{ $site_settings['button_text_color'] ?? '#FFFFFF' }}
             ;
 
             --btn-text-color:
@@ -79,10 +86,50 @@
             ;
         }
 
+        /* Dark Mode Variable Overrides */
+        body.dark-mode {
+            --color-bg: #1f2937 !important;
+            --color-header-bg: #111827 !important;
+            --color-footer-bg: #000000 !important;
+            --text-color: #f3f4f6 !important;
+            --card-bg: #374151 !important;
+        }
+
         body {
             font-family: var(--dynamic-font) !important;
             font-size: var(--base-font-size);
             background-color: var(--color-bg) !important;
+            color: var(--text-color) !important;
+        }
+
+        /* Dark Mode Utility Adaptations */
+        body.dark-mode .bg-white {
+            background-color: var(--card-bg) !important;
+            color: var(--text-color) !important;
+        }
+        
+        body.dark-mode .text-gray-900, 
+        body.dark-mode .text-gray-800, 
+        body.dark-mode .text-gray-700 {
+            color: #f9fafb !important;
+        }
+        
+        body.dark-mode .text-gray-600, 
+        body.dark-mode .text-gray-500 {
+                color: #d1d5db !important;
+        }
+        
+        body.dark-mode .border-gray-100, 
+        body.dark-mode .border-gray-200 {
+            border-color: #4b5563 !important;
+        }
+        
+        body.dark-mode input, 
+        body.dark-mode select, 
+        body.dark-mode textarea {
+            background-color: #374151 !important;
+            border-color: #4b5563 !important;
+            color: white !important;
         }
 
         /* Heading Color Override Removed */
@@ -213,7 +260,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen {{ ($userTheme ?? 'light') === 'dark' ? 'dark-mode' : '' }}">
     <a href="#main-content"
         class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-indigo-600 text-white p-3 rounded-lg font-bold shadow-lg transition">
         Saltar al contenido principal
@@ -271,6 +318,47 @@
                             🩺 Veterinario
                         </a>
                     @endif
+
+                    <!-- Configuración Rapida -->
+                    <div class="relative">
+                        <button id="quick-settings-btn" onclick="toggleQuickSettings(event)" class="text-gray-500 hover:text-indigo-600 focus:outline-none transition p-2">
+                            <i class="fas fa-cog text-xl"></i>
+                        </button>
+                        
+                        <!-- Dropdown -->
+                        <div id="quick-settings-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 p-4">
+                            <h4 class="text-sm font-bold text-gray-900 mb-3 border-b pb-2">Preferencias</h4>
+                            
+                            <!-- Tema -->
+                            <div class="mb-4">
+                                <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider block mb-2">Tema</span>
+                                <div class="flex bg-gray-100 rounded-lg p-1">
+                                    <button onclick="updateTheme('light')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userTheme ?? 'light') === 'light' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-theme-light">
+                                        <i class="fas fa-sun mr-1"></i> Claro
+                                    </button>
+                                    <button onclick="updateTheme('dark')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userTheme ?? 'light') === 'dark' ? 'bg-gray-700 text-white shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-theme-dark">
+                                        <i class="fas fa-moon mr-1"></i> Oscuro
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Fuente -->
+                            <div>
+                                <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider block mb-2">Tamaño Texto</span>
+                                <div class="flex bg-gray-100 rounded-lg p-1">
+                                    <button onclick="updateFontSize('small')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userFontSize ?? 'medium') === 'small' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-font-small">
+                                        A-
+                                    </button>
+                                    <button onclick="updateFontSize('medium')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userFontSize ?? 'medium') === 'medium' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-font-medium">
+                                        A
+                                    </button>
+                                    <button onclick="updateFontSize('large')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userFontSize ?? 'medium') === 'large' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-font-large">
+                                        A+
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <a href="{{ route('mi-cuenta') }}"
                         class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-semibold transition"
@@ -636,6 +724,78 @@
 
     <!-- Script de Cookies -->
     <script src="{{ asset('js/cookies.js') }}"></script>
+
+    <script>
+        // Quick Settings Dropdown Logic
+        function toggleQuickSettings(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('quick-settings-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        // Close on click outside
+        window.addEventListener('click', function(e) {
+            const btn = document.getElementById('quick-settings-btn');
+            const dropdown = document.getElementById('quick-settings-dropdown');
+            if (dropdown && !dropdown.classList.contains('hidden')) {
+                if (!dropdown.contains(e.target) && (!btn || !btn.contains(e.target))) {
+                     dropdown.classList.add('hidden');
+                }
+            }
+        });
+
+        function updateTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode'); 
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+
+            // Update Buttons State
+            document.getElementById('btn-theme-light').className = theme === 'light' ? 'flex-1 py-1.5 text-xs font-medium rounded-md transition bg-white text-indigo-600 shadow-sm' : 'flex-1 py-1.5 text-xs font-medium rounded-md transition text-gray-500 hover:text-gray-700';
+            document.getElementById('btn-theme-dark').className = theme === 'dark' ? 'flex-1 py-1.5 text-xs font-medium rounded-md transition bg-gray-700 text-white shadow-sm' : 'flex-1 py-1.5 text-xs font-medium rounded-md transition text-gray-500 hover:text-gray-700';
+
+            savePreference('theme', theme, false); 
+        }
+
+        function updateFontSize(size) {
+            let px = '16px';
+            if(size === 'small') px = '14px';
+            if(size === 'large') px = '18px';
+
+            document.documentElement.style.setProperty('--base-font-size', px);
+            
+            // Update Buttons
+             ['small', 'medium', 'large'].forEach(s => {
+                const btn = document.getElementById('btn-font-' + s);
+                if(size === s) {
+                    btn.className = 'flex-1 py-1.5 text-xs font-medium rounded-md transition bg-white text-indigo-600 shadow-sm';
+                } else {
+                    btn.className = 'flex-1 py-1.5 text-xs font-medium rounded-md transition text-gray-500 hover:text-gray-700';
+                }
+             });
+
+            savePreference('font_size', size, false);
+        }
+
+        function savePreference(key, value, reload = false) {
+            fetch('{{ route("mi-cuenta.preferencias") }}', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ [key]: value })
+            })
+            .then(response => {
+                if(reload) location.reload();
+            })
+            .catch(error => console.error('Error saving preference:', error));
+        }
+    </script>
 
     @yield('scripts')
 </body>

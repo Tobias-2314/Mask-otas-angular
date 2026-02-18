@@ -25,6 +25,7 @@ class Usuario extends Authenticatable
         'contrasena',
         'role',
         'foto_perfil',
+        'configuracion',
     ];
 
     /**
@@ -47,6 +48,7 @@ class Usuario extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'contrasena' => 'hashed',
+            'configuracion' => 'array',
         ];
     }
     

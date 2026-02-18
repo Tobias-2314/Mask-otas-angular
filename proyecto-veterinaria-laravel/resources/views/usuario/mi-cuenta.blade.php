@@ -67,6 +67,80 @@
                     </div>
                 </form>
             </div>
+
+            <!-- Preferencias de Usuario -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Preferencias</h3>
+                
+                <form action="{{ route('mi-cuenta.preferencias') }}" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tema</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="theme" value="light" class="peer sr-only" 
+                                    {{ ($usuario->configuracion['theme'] ?? 'light') == 'light' ? 'checked' : '' }}>
+                                <div class="rounded-lg border border-gray-200 p-3 hover:bg-gray-50 peer-checked:border-teal-500 peer-checked:bg-teal-50 peer-checked:text-teal-700 transition">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <i class="fas fa-sun"></i>
+                                        <span class="text-sm font-medium">Claro</span>
+                                    </div>
+                                </div>
+                            </label>
+                            
+                            <label class="cursor-pointer">
+                                <input type="radio" name="theme" value="dark" class="peer sr-only"
+                                    {{ ($usuario->configuracion['theme'] ?? 'light') == 'dark' ? 'checked' : '' }}>
+                                <div class="rounded-lg border border-gray-200 p-3 hover:bg-gray-50 peer-checked:border-teal-500 peer-checked:bg-teal-50 peer-checked:text-teal-700 transition">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <i class="fas fa-moon"></i>
+                                        <span class="text-sm font-medium">Oscuro</span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tamaño de Texto</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="font_size" value="small" class="peer sr-only"
+                                    {{ ($usuario->configuracion['font_size'] ?? 'medium') == 'small' ? 'checked' : '' }}>
+                                <div class="rounded-lg border border-gray-200 p-2 text-center hover:bg-gray-50 peer-checked:border-teal-500 peer-checked:bg-teal-50 peer-checked:text-teal-700 transition">
+                                    <span class="text-xs">A</span>
+                                    <span class="block text-xs mt-1">Pequeño</span>
+                                </div>
+                            </label>
+                            
+                            <label class="cursor-pointer">
+                                <input type="radio" name="font_size" value="medium" class="peer sr-only"
+                                    {{ ($usuario->configuracion['font_size'] ?? 'medium') == 'medium' ? 'checked' : '' }}>
+                                <div class="rounded-lg border border-gray-200 p-2 text-center hover:bg-gray-50 peer-checked:border-teal-500 peer-checked:bg-teal-50 peer-checked:text-teal-700 transition">
+                                    <span class="text-sm">A</span>
+                                    <span class="block text-xs mt-1">Normal</span>
+                                </div>
+                            </label>
+                            
+                            <label class="cursor-pointer">
+                                <input type="radio" name="font_size" value="large" class="peer sr-only"
+                                    {{ ($usuario->configuracion['font_size'] ?? 'medium') == 'large' ? 'checked' : '' }}>
+                                <div class="rounded-lg border border-gray-200 p-2 text-center hover:bg-gray-50 peer-checked:border-teal-500 peer-checked:bg-teal-50 peer-checked:text-teal-700 transition">
+                                    <span class="text-lg">A</span>
+                                    <span class="block text-xs mt-1">Grande</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 transition">
+                            Actualizar Preferencias
+                        </button>
+                    </div>
+                </form>
         </div>
 
         <!-- Columna Derecha: Mascotas y Citas -->
