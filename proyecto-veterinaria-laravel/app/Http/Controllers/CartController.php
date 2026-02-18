@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
-    public function addToCart($id)
+    public function addToCart(Request $request, $id)
     {
         $product = Product::findOrFail($id);
         $cart = session()->get('cart', []);
@@ -25,6 +25,11 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => 'Producto añadido al carrito exitosamente!', 'cart_count' => count($cart)]);
+        }
+
         return redirect()->back()->with('success', 'Producto añadido al carrito exitosamente!');
     }
 

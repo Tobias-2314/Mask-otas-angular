@@ -246,11 +246,11 @@
 
             <div class="hidden md:flex items-center gap-4">
                 @if(request()->routeIs('tienda') || request()->routeIs('cart.*'))
-                    <a href="{{ route('cart.show') }}" class="relative text-gray-600 hover:text-indigo-600 transition p-2"
+                    <a href="{{ route('cart.show') }}" id="cart-link" class="relative text-gray-600 hover:text-indigo-600 transition p-2"
                         aria-label="Carrito de compras">
                         <i class="fas fa-shopping-cart text-xl" aria-hidden="true"></i>
                         @if(session('cart'))
-                            <span
+                            <span id="cart-count-badge"
                                 class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
                                 {{ count(session('cart')) }}
                             </span>
