@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\CartHelper;
 
 class CheckoutController extends Controller
 {
+    use CartHelper;
+
     // Muestra la página de checkout simula
     public function create()
     {
-        $cart = session()->get('cart', []);
+        $cart = $this->getCart();
         $total = 0;
-        foreach($cart as $item) {
+        foreach ($cart as $item) {
             $total += $item['price'] * $item['quantity'];
         }
         return view('checkout', compact('cart', 'total'));
@@ -24,7 +27,7 @@ class CheckoutController extends Controller
     {
         // Validación básica
         $request->validate([
-            'card_number' => 'required|numeric|digits:16', 
+            'card_number' => 'required|numeric|digits:16',
             'card_expiry' => 'required',
             'card_cvc' => 'required|numeric|digits:3',
             'items' => 'required|json', // Esperamos los items como JSON string desde el frontend
@@ -45,8 +48,8 @@ class CheckoutController extends Controller
 
         if ($request->wantsJson()) {
             // Limpiar carrito de la sesión
-            session()->forget('cart');
-            
+            session()->forget($this->getCartKey());
+
             return response()->json([
                 'success' => true,
                 'message' => '¡Pedido realizado con éxito!',

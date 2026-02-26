@@ -26,7 +26,7 @@
             'medium' => '16px',
             'large' => '18px',
         ];
-        
+
         $userConfig = Auth::check() ? Auth::user()->configuracion : [];
         $userFontSize = $userConfig['font_size'] ?? null;
         $userTheme = $userConfig['theme'] ?? 'light';
@@ -58,11 +58,17 @@
             --color-secondary:
                 {{ $site_settings['secondary_color'] ?? '#10B981' }}
             ;
-            
+
             /* Default Light Theme Variables */
-            --color-bg: {{ $site_settings['background_color'] ?? '#F9FAFB' }};
-            --color-header-bg: {{ $site_settings['header_bg_color'] ?? '#FFFFFF' }};
-            --color-footer-bg: {{ $site_settings['footer_bg_color'] ?? '#111827' }};
+            --color-bg:
+                {{ $site_settings['background_color'] ?? '#F9FAFB' }}
+            ;
+            --color-header-bg:
+                {{ $site_settings['header_bg_color'] ?? '#FFFFFF' }}
+            ;
+            --color-footer-bg:
+                {{ $site_settings['footer_bg_color'] ?? '#111827' }}
+            ;
             --text-color: #1f2937;
             --card-bg: #ffffff;
 
@@ -107,25 +113,25 @@
             background-color: var(--card-bg) !important;
             color: var(--text-color) !important;
         }
-        
-        body.dark-mode .text-gray-900, 
-        body.dark-mode .text-gray-800, 
+
+        body.dark-mode .text-gray-900,
+        body.dark-mode .text-gray-800,
         body.dark-mode .text-gray-700 {
             color: #f9fafb !important;
         }
-        
-        body.dark-mode .text-gray-600, 
+
+        body.dark-mode .text-gray-600,
         body.dark-mode .text-gray-500 {
-                color: #d1d5db !important;
+            color: #d1d5db !important;
         }
-        
-        body.dark-mode .border-gray-100, 
+
+        body.dark-mode .border-gray-100,
         body.dark-mode .border-gray-200 {
             border-color: #4b5563 !important;
         }
-        
-        body.dark-mode input, 
-        body.dark-mode select, 
+
+        body.dark-mode input,
+        body.dark-mode select,
         body.dark-mode textarea {
             background-color: #374151 !important;
             border-color: #4b5563 !important;
@@ -260,7 +266,8 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen {{ ($userTheme ?? 'light') === 'dark' ? 'dark-mode' : '' }}">
+<body
+    class="bg-gray-50 text-gray-800 flex flex-col min-h-screen {{ ($userTheme ?? 'light') === 'dark' ? 'dark-mode' : '' }}">
     <a href="#main-content"
         class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-indigo-600 text-white p-3 rounded-lg font-bold shadow-lg transition">
         Saltar al contenido principal
@@ -293,13 +300,13 @@
 
             <div class="hidden md:flex items-center gap-4">
                 @if(request()->routeIs('tienda') || request()->routeIs('cart.*'))
-                    <a href="{{ route('cart.show') }}" id="cart-link" class="relative text-gray-600 hover:text-indigo-600 transition p-2"
-                        aria-label="Carrito de compras">
+                    <a href="{{ route('cart.show') }}" id="cart-link"
+                        class="relative text-gray-600 hover:text-indigo-600 transition p-2" aria-label="Carrito de compras">
                         <i class="fas fa-shopping-cart text-xl" aria-hidden="true"></i>
-                        @if(session('cart'))
+                        @if($cartCount > 0)
                             <span id="cart-count-badge"
                                 class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
-                                {{ count(session('cart')) }}
+                                {{ $cartCount }}
                             </span>
                         @endif
                     </a>
@@ -321,22 +328,29 @@
 
                     <!-- Configuración Rapida -->
                     <div class="relative">
-                        <button id="quick-settings-btn" onclick="toggleQuickSettings(event)" class="text-gray-500 hover:text-indigo-600 focus:outline-none transition p-2">
+                        <button id="quick-settings-btn" onclick="toggleQuickSettings(event)"
+                            class="text-gray-500 hover:text-indigo-600 focus:outline-none transition p-2">
                             <i class="fas fa-cog text-xl"></i>
                         </button>
-                        
+
                         <!-- Dropdown -->
-                        <div id="quick-settings-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 p-4">
+                        <div id="quick-settings-dropdown"
+                            class="hidden absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 p-4">
                             <h4 class="text-sm font-bold text-gray-900 mb-3 border-b pb-2">Preferencias</h4>
-                            
+
                             <!-- Tema -->
                             <div class="mb-4">
-                                <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider block mb-2">Tema</span>
+                                <span
+                                    class="text-xs text-gray-500 font-semibold uppercase tracking-wider block mb-2">Tema</span>
                                 <div class="flex bg-gray-100 rounded-lg p-1">
-                                    <button onclick="updateTheme('light')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userTheme ?? 'light') === 'light' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-theme-light">
+                                    <button onclick="updateTheme('light')"
+                                        class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userTheme ?? 'light') === 'light' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}"
+                                        id="btn-theme-light">
                                         <i class="fas fa-sun mr-1"></i> Claro
                                     </button>
-                                    <button onclick="updateTheme('dark')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userTheme ?? 'light') === 'dark' ? 'bg-gray-700 text-white shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-theme-dark">
+                                    <button onclick="updateTheme('dark')"
+                                        class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userTheme ?? 'light') === 'dark' ? 'bg-gray-700 text-white shadow-sm' : 'text-gray-500 hover:text-gray-700' }}"
+                                        id="btn-theme-dark">
                                         <i class="fas fa-moon mr-1"></i> Oscuro
                                     </button>
                                 </div>
@@ -344,15 +358,22 @@
 
                             <!-- Fuente -->
                             <div>
-                                <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider block mb-2">Tamaño Texto</span>
+                                <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider block mb-2">Tamaño
+                                    Texto</span>
                                 <div class="flex bg-gray-100 rounded-lg p-1">
-                                    <button onclick="updateFontSize('small')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userFontSize ?? 'medium') === 'small' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-font-small">
+                                    <button onclick="updateFontSize('small')"
+                                        class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userFontSize ?? 'medium') === 'small' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}"
+                                        id="btn-font-small">
                                         A-
                                     </button>
-                                    <button onclick="updateFontSize('medium')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userFontSize ?? 'medium') === 'medium' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-font-medium">
+                                    <button onclick="updateFontSize('medium')"
+                                        class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userFontSize ?? 'medium') === 'medium' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}"
+                                        id="btn-font-medium">
                                         A
                                     </button>
-                                    <button onclick="updateFontSize('large')" class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userFontSize ?? 'medium') === 'large' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}" id="btn-font-large">
+                                    <button onclick="updateFontSize('large')"
+                                        class="flex-1 py-1.5 text-xs font-medium rounded-md transition {{ ($userFontSize ?? 'medium') === 'large' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}"
+                                        id="btn-font-large">
                                         A+
                                     </button>
                                 </div>
@@ -403,8 +424,8 @@
                     class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Tienda</a>
                 @if(request()->routeIs('tienda') || request()->routeIs('cart.*'))
                     <a href="{{ route('cart.show') }}"
-                        class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Carrito @if(session('cart'))
-                        ({{ count(session('cart')) }}) @endif</a>
+                        class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Carrito @if($cartCount > 0)
+                        ({{ $cartCount }}) @endif</a>
                 @endif
                 <a href="{{ url('/servicios') }}"
                     class="block py-2 text-gray-600 hover:text-indigo-600 font-medium">Servicios</a>
@@ -457,9 +478,12 @@
                 <h4 class="text-xl font-bold mb-4">Enlaces Rápidos</h4>
                 <ul class="space-y-2 text-gray-400">
                     <li><a href="#" class="hover:text-indigo-400">Nuestros Doctores</a></li>
-                    <li><a href="{{ route('politica-privacidad') }}" class="hover:text-indigo-400">Política de Privacidad</a></li>
-                    <li><a href="{{ route('politica-cookies') }}" class="hover:text-indigo-400">Política de Cookies</a></li>
-                    <li><a href="{{ route('terminos-servicio') }}" class="hover:text-indigo-400">Términos de Servicio</a></li>
+                    <li><a href="{{ route('politica-privacidad') }}" class="hover:text-indigo-400">Política de
+                            Privacidad</a></li>
+                    <li><a href="{{ route('politica-cookies') }}" class="hover:text-indigo-400">Política de Cookies</a>
+                    </li>
+                    <li><a href="{{ route('terminos-servicio') }}" class="hover:text-indigo-400">Términos de
+                            Servicio</a></li>
                 </ul>
             </div>
             <div>
@@ -550,7 +574,8 @@
     </script>
 
     <!-- Banner de Cookies -->
-    <div id="cookie-banner" class="hidden opacity-0 fixed bottom-0 left-0 right-0 bg-white border-t-4 border-indigo-600 shadow-2xl z-50 transition-opacity duration-300">
+    <div id="cookie-banner"
+        class="hidden opacity-0 fixed bottom-0 left-0 right-0 bg-white border-t-4 border-indigo-600 shadow-2xl z-50 transition-opacity duration-300">
         <div class="container mx-auto px-4 py-6 md:px-6">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div class="flex-1">
@@ -559,21 +584,27 @@
                         <div>
                             <h3 class="text-lg font-bold text-gray-900 mb-2">🍪 Este sitio utiliza cookies</h3>
                             <p class="text-sm text-gray-600 leading-relaxed">
-                                Utilizamos cookies propias y de terceros para mejorar tu experiencia de navegación, analizar el uso del sitio y personalizar contenidos. 
-                                Al hacer clic en "Aceptar todo", consientes el uso de todas las cookies. Puedes gestionar tus preferencias en 
-                                <a href="{{ route('politica-cookies') }}" class="text-indigo-600 hover:underline font-semibold">Política de Cookies</a>.
+                                Utilizamos cookies propias y de terceros para mejorar tu experiencia de navegación,
+                                analizar el uso del sitio y personalizar contenidos.
+                                Al hacer clic en "Aceptar todo", consientes el uso de todas las cookies. Puedes
+                                gestionar tus preferencias en
+                                <a href="{{ route('politica-cookies') }}"
+                                    class="text-indigo-600 hover:underline font-semibold">Política de Cookies</a>.
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                    <button id="reject-all-cookies" class="px-6 py-2.5 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-100 transition text-sm whitespace-nowrap">
+                    <button id="reject-all-cookies"
+                        class="px-6 py-2.5 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-100 transition text-sm whitespace-nowrap">
                         Rechazar todo
                     </button>
-                    <button id="configure-cookies" class="px-6 py-2.5 border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition text-sm whitespace-nowrap">
+                    <button id="configure-cookies"
+                        class="px-6 py-2.5 border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition text-sm whitespace-nowrap">
                         Configurar
                     </button>
-                    <button id="accept-all-cookies" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition text-sm whitespace-nowrap shadow-lg">
+                    <button id="accept-all-cookies"
+                        class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition text-sm whitespace-nowrap shadow-lg">
                         Aceptar todo
                     </button>
                 </div>
@@ -582,7 +613,8 @@
     </div>
 
     <!-- Modal de Configuración de Cookies -->
-    <div id="cookie-modal" class="hidden opacity-0 fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+    <div id="cookie-modal"
+        class="hidden opacity-0 fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <!-- Header -->
             <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-t-2xl">
@@ -595,7 +627,8 @@
                         <i class="fas fa-times text-2xl"></i>
                     </button>
                 </div>
-                <p class="mt-2 text-indigo-100 text-sm">Personaliza tus preferencias de cookies según tus necesidades</p>
+                <p class="mt-2 text-indigo-100 text-sm">Personaliza tus preferencias de cookies según tus necesidades
+                </p>
             </div>
 
             <!-- Contenido -->
@@ -607,15 +640,20 @@
                             <div class="flex items-center gap-2 mb-2">
                                 <i class="fas fa-shield-alt text-green-600"></i>
                                 <h3 class="text-lg font-bold text-gray-900">Cookies Necesarias</h3>
-                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Siempre activas</span>
+                                <span
+                                    class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Siempre
+                                    activas</span>
                             </div>
                             <p class="text-sm text-gray-600 leading-relaxed">
-                                Estas cookies son esenciales para el funcionamiento del sitio web y no pueden desactivarse. 
+                                Estas cookies son esenciales para el funcionamiento del sitio web y no pueden
+                                desactivarse.
                                 Incluyen cookies de sesión, autenticación y seguridad.
                             </p>
                             <div class="mt-3 bg-gray-50 p-3 rounded-lg">
-                                <p class="text-xs text-gray-500"><strong>Ejemplos:</strong> PHPSESSID, XSRF-TOKEN, maskotas_session</p>
-                                <p class="text-xs text-gray-500 mt-1"><strong>Duración:</strong> Sesión o hasta 2 horas</p>
+                                <p class="text-xs text-gray-500"><strong>Ejemplos:</strong> PHPSESSID, XSRF-TOKEN,
+                                    maskotas_session</p>
+                                <p class="text-xs text-gray-500 mt-1"><strong>Duración:</strong> Sesión o hasta 2 horas
+                                </p>
                             </div>
                         </div>
                         <div class="ml-4">
@@ -635,18 +673,22 @@
                                 <h3 class="text-lg font-bold text-gray-900">Cookies Funcionales</h3>
                             </div>
                             <p class="text-sm text-gray-600 leading-relaxed">
-                                Permiten recordar tus preferencias (idioma, región, tema) y mejorar la funcionalidad del sitio. 
+                                Permiten recordar tus preferencias (idioma, región, tema) y mejorar la funcionalidad del
+                                sitio.
                                 Sin estas cookies, algunas funciones pueden no estar disponibles.
                             </p>
                             <div class="mt-3 bg-gray-50 p-3 rounded-lg">
-                                <p class="text-xs text-gray-500"><strong>Ejemplos:</strong> Preferencias de idioma, tema oscuro/claro</p>
+                                <p class="text-xs text-gray-500"><strong>Ejemplos:</strong> Preferencias de idioma, tema
+                                    oscuro/claro</p>
                                 <p class="text-xs text-gray-500 mt-1"><strong>Duración:</strong> Hasta 1 año</p>
                             </div>
                         </div>
                         <div class="ml-4">
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="cookie-functional" class="sr-only peer">
-                                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
+                                <div
+                                    class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600">
+                                </div>
                             </label>
                         </div>
                     </div>
@@ -661,18 +703,22 @@
                                 <h3 class="text-lg font-bold text-gray-900">Cookies de Análisis</h3>
                             </div>
                             <p class="text-sm text-gray-600 leading-relaxed">
-                                Nos ayudan a entender cómo los visitantes interactúan con el sitio web, recopilando información de forma anónima. 
+                                Nos ayudan a entender cómo los visitantes interactúan con el sitio web, recopilando
+                                información de forma anónima.
                                 Utilizamos Google Analytics para mejorar nuestros servicios.
                             </p>
                             <div class="mt-3 bg-gray-50 p-3 rounded-lg">
-                                <p class="text-xs text-gray-500"><strong>Proveedores:</strong> Google Analytics, Google Tag Manager</p>
+                                <p class="text-xs text-gray-500"><strong>Proveedores:</strong> Google Analytics, Google
+                                    Tag Manager</p>
                                 <p class="text-xs text-gray-500 mt-1"><strong>Duración:</strong> Hasta 2 años</p>
                             </div>
                         </div>
                         <div class="ml-4">
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="cookie-analytics" class="sr-only peer">
-                                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600"></div>
+                                <div
+                                    class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600">
+                                </div>
                             </label>
                         </div>
                     </div>
@@ -687,18 +733,22 @@
                                 <h3 class="text-lg font-bold text-gray-900">Cookies de Marketing</h3>
                             </div>
                             <p class="text-sm text-gray-600 leading-relaxed">
-                                Se utilizan para rastrear visitantes en diferentes sitios web y mostrar anuncios relevantes. 
+                                Se utilizan para rastrear visitantes en diferentes sitios web y mostrar anuncios
+                                relevantes.
                                 Pueden ser establecidas por nuestros socios publicitarios.
                             </p>
                             <div class="mt-3 bg-gray-50 p-3 rounded-lg">
-                                <p class="text-xs text-gray-500"><strong>Proveedores:</strong> Google Ads, Facebook Pixel, LinkedIn Insight</p>
+                                <p class="text-xs text-gray-500"><strong>Proveedores:</strong> Google Ads, Facebook
+                                    Pixel, LinkedIn Insight</p>
                                 <p class="text-xs text-gray-500 mt-1"><strong>Duración:</strong> Hasta 2 años</p>
                             </div>
                         </div>
                         <div class="ml-4">
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="cookie-marketing" class="sr-only peer">
-                                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-orange-600"></div>
+                                <div
+                                    class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-orange-600">
+                                </div>
                             </label>
                         </div>
                     </div>
@@ -708,12 +758,14 @@
             <!-- Footer -->
             <div class="bg-gray-50 px-6 py-4 rounded-b-2xl border-t border-gray-200">
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <a href="{{ route('politica-cookies') }}" class="text-sm text-indigo-600 hover:underline font-semibold">
+                    <a href="{{ route('politica-cookies') }}"
+                        class="text-sm text-indigo-600 hover:underline font-semibold">
                         <i class="fas fa-info-circle mr-1"></i>
                         Más información sobre cookies
                     </a>
                     <div class="flex gap-3 w-full sm:w-auto">
-                        <button id="save-cookie-preferences" class="flex-1 sm:flex-none px-8 py-2.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition shadow-lg">
+                        <button id="save-cookie-preferences"
+                            class="flex-1 sm:flex-none px-8 py-2.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition shadow-lg">
                             Guardar preferencias
                         </button>
                     </div>
@@ -736,19 +788,19 @@
         }
 
         // Close on click outside
-        window.addEventListener('click', function(e) {
+        window.addEventListener('click', function (e) {
             const btn = document.getElementById('quick-settings-btn');
             const dropdown = document.getElementById('quick-settings-dropdown');
             if (dropdown && !dropdown.classList.contains('hidden')) {
                 if (!dropdown.contains(e.target) && (!btn || !btn.contains(e.target))) {
-                     dropdown.classList.add('hidden');
+                    dropdown.classList.add('hidden');
                 }
             }
         });
 
         function updateTheme(theme) {
             if (theme === 'dark') {
-                document.body.classList.add('dark-mode'); 
+                document.body.classList.add('dark-mode');
             } else {
                 document.body.classList.remove('dark-mode');
             }
@@ -757,25 +809,25 @@
             document.getElementById('btn-theme-light').className = theme === 'light' ? 'flex-1 py-1.5 text-xs font-medium rounded-md transition bg-white text-indigo-600 shadow-sm' : 'flex-1 py-1.5 text-xs font-medium rounded-md transition text-gray-500 hover:text-gray-700';
             document.getElementById('btn-theme-dark').className = theme === 'dark' ? 'flex-1 py-1.5 text-xs font-medium rounded-md transition bg-gray-700 text-white shadow-sm' : 'flex-1 py-1.5 text-xs font-medium rounded-md transition text-gray-500 hover:text-gray-700';
 
-            savePreference('theme', theme, false); 
+            savePreference('theme', theme, false);
         }
 
         function updateFontSize(size) {
             let px = '16px';
-            if(size === 'small') px = '14px';
-            if(size === 'large') px = '18px';
+            if (size === 'small') px = '14px';
+            if (size === 'large') px = '18px';
 
             document.documentElement.style.setProperty('--base-font-size', px);
-            
+
             // Update Buttons
-             ['small', 'medium', 'large'].forEach(s => {
+            ['small', 'medium', 'large'].forEach(s => {
                 const btn = document.getElementById('btn-font-' + s);
-                if(size === s) {
+                if (size === s) {
                     btn.className = 'flex-1 py-1.5 text-xs font-medium rounded-md transition bg-white text-indigo-600 shadow-sm';
                 } else {
                     btn.className = 'flex-1 py-1.5 text-xs font-medium rounded-md transition text-gray-500 hover:text-gray-700';
                 }
-             });
+            });
 
             savePreference('font_size', size, false);
         }
@@ -790,10 +842,10 @@
                 },
                 body: JSON.stringify({ [key]: value })
             })
-            .then(response => {
-                if(reload) location.reload();
-            })
-            .catch(error => console.error('Error saving preference:', error));
+                .then(response => {
+                    if (reload) location.reload();
+                })
+                .catch(error => console.error('Error saving preference:', error));
         }
     </script>
 

@@ -27,5 +27,18 @@ class AppServiceProvider extends ServiceProvider
         } catch (\Exception $e) {
             // Ignorar error si la DB no está lista
         }
+
+        // Compartir información del carrito globalmente
+        \Illuminate\Support\Facades\View::composer('*', function ($view) {
+            if (auth()->check()) {
+                $cartKey = 'cart_user_' . auth()->id();
+            } else {
+                $cartKey = 'cart_guest';
+            }
+
+            $cart = session()->get($cartKey, []);
+            $view->with('cart', $cart);
+            $view->with('cartCount', count($cart));
+        });
     }
 }

@@ -82,10 +82,19 @@
                             <!-- Product Content -->
                             <div class="p-6 flex-grow flex flex-col">
                                 <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $product->name }}</h3>
-                                <p class="text-gray-600 mb-4 flex-grow text-sm">{{ Str::limit($product->description, 80) }}</p>
+                                <p class="text-gray-600 mb-2 flex-grow text-sm">{{ Str::limit($product->description, 80) }}</p>
+
+                                <div class="mb-4">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        Stock: <span id="product-stock-{{ $product->id }}"
+                                            class="ml-1 font-bold">{{ $product->stock }}</span>
+                                    </span>
+                                </div>
 
                                 <div class="flex items-center justify-between mt-auto">
-                                    <span class="text-2xl font-bold text-indigo-600 shop-price">{{ number_format($product->price, 2) }}
+                                    <span
+                                        class="text-2xl font-bold text-indigo-600 shop-price">{{ number_format($product->price, 2) }}
                                         €</span>
 
                                     <form action="{{ route('cart.add', $product->id) }}" method="POST" class="ajax-cart-form">
@@ -113,62 +122,99 @@
 @endsection
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const forms = document.querySelectorAll('.ajax-cart-form');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const forms = document.querySelectorAll('.ajax-cart-form');
 
-        forms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const button = this.querySelector('button[type="submit"]');
-                const originalContent = button.innerHTML;
-                button.disabled = true;
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            forms.forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
 
-                const formData = new FormData(this);
+                    const button = this.querySelector('button[type="submit"]');
+                    const originalContent = button.innerHTML;
+                    button.disabled = true;
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-                fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    },
-                    body: formData
+                    const formData = new FormData(this);
+
+                    fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                        .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.error || 'Error al añadir al carrito');
+                        });
+                    }
+                    return response.json();
                 })
-                .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         updateCartBadge(data.cart_count);
                         showToast(data.success);
                     }
                 })
-                .catch(error => console.error('Error:', error))
-                .finally(() => {
-                    button.disabled = false;
-                    button.innerHTML = originalContent;
+                .catch(error => {
+                    console.error('Error:', error);
+                    showErrorToast(error.message);
+                })
+                        .finally(() => {
+                            button.disabled = false;
+                            button.innerHTML = originalContent;
+                        });
                 });
             });
-        });
 
-        function updateCartBadge(count) {
-            const cartLink = document.getElementById('cart-link');
-            let badge = document.getElementById('cart-count-badge');
+            function updateCartBadge(count) {
+                const cartLink = document.getElementById('cart-link');
+                let badge = document.getElementById('cart-count-badge');
 
-            if (cartLink && count > 0) {
-                if (!badge) {
-                    badge = document.createElement('span');
-                    badge.id = 'cart-count-badge';
-                    badge.className = 'absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white';
-                    cartLink.appendChild(badge);
+                if (cartLink && count > 0) {
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.id = 'cart-count-badge';
+                        badge.className = 'absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white';
+                        cartLink.appendChild(badge);
+                    }
+                    badge.textContent = count;
+                } else if (badge) {
+                    badge.remove();
                 }
-                badge.textContent = count;
-            } else if (badge) {
-                badge.remove();
             }
+
+            function showToast(message) {
+                let container = document.getElementById('toast-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'toast-container';
+                    container.className = 'fixed top-24 right-5 z-50 flex flex-col gap-2 pointer-events-none';
+                    document.body.appendChild(container);
+                }
+
+                const toast = document.createElement('div');
+                toast.className = 'bg-white border-l-4 border-green-500 rounded shadow-lg p-4 flex items-center transform transition-all duration-300 translate-x-full pointer-events-auto';
+                toast.innerHTML = `
+                    <div class="text-green-500 mr-3"><i class="fas fa-check-circle text-xl"></i></div>
+                    <div class="text-gray-800 font-medium text-sm">${message}</div>
+                `;
+
+                container.appendChild(toast);
+                requestAnimationFrame(() => {
+                    setTimeout(() => toast.classList.remove('translate-x-full'), 10);
+                });
+
+                setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
-        function showToast(message) {
+        function showErrorToast(message) {
             let container = document.getElementById('toast-container');
             if (!container) {
                 container = document.createElement('div');
@@ -178,9 +224,9 @@
             }
 
             const toast = document.createElement('div');
-            toast.className = 'bg-white border-l-4 border-green-500 rounded shadow-lg p-4 flex items-center transform transition-all duration-300 translate-x-full pointer-events-auto';
+            toast.className = 'bg-white border-l-4 border-red-500 rounded shadow-lg p-4 flex items-center transform transition-all duration-300 translate-x-full pointer-events-auto';
             toast.innerHTML = `
-                <div class="text-green-500 mr-3"><i class="fas fa-check-circle text-xl"></i></div>
+                <div class="text-red-500 mr-3"><i class="fas fa-exclamation-circle text-xl"></i></div>
                 <div class="text-gray-800 font-medium text-sm">${message}</div>
             `;
 
@@ -194,6 +240,38 @@
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
-    });
-</script>
+
+            // Funcción para actualizar stocks automáticamente cada 5 segundos
+            function updateStocks() {
+                fetch('{{ route('api.productos.stock') }}', {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(stocks => {
+                        stocks.forEach(product => {
+                            const stockElement = document.getElementById(`product-stock-${product.id}`);
+                            if (stockElement) {
+                                const currentStock = parseInt(stockElement.textContent);
+                                if (currentStock !== product.stock) {
+                                    stockElement.textContent = product.stock;
+
+                                    // Efecto visual sutil al cambiar
+                                    stockElement.parentElement.classList.add('animate-pulse', 'bg-yellow-100');
+                                    setTimeout(() => {
+                                        stockElement.parentElement.classList.remove('animate-pulse', 'bg-yellow-100');
+                                    }, 2000);
+                                }
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error al actualizar stock:', error));
+            }
+
+            // Iniciar el intervalo de 5 segundos
+            setInterval(updateStocks, 5000);
+        });
+    </script>
 @endsection

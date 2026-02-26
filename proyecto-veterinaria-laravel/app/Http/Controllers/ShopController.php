@@ -22,4 +22,10 @@ class ShopController extends Controller
         $products = $query->get();
         return view('shop.index', compact('products'));
     }
+
+    public function stock()
+    {
+        $stocks = Product::select('id', 'stock')->get();
+        return response()->json($stocks);
+    }
 }

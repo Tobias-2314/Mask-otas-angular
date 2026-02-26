@@ -19,6 +19,7 @@ Route::view('/terminos-servicio', 'terminos-servicio')->name('terminos-servicio'
 
 // Tienda
 Route::get('/tienda', [ShopController::class, 'index'])->name('tienda');
+Route::get('/api/productos/stock', [ShopController::class, 'stock'])->name('api.productos.stock');
 
 // Carrito
 Route::get('/carrito', [App\Http\Controllers\CartController::class, 'showCart'])->name('cart.show');
