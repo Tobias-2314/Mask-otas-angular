@@ -53,4 +53,6 @@ router.beforeEach(async (to) => {
   if (to.meta.role === 'ROLE_VETERINARIO' && !auth.isVeterinario) return '/'
 })
 
+
+
 export default router
