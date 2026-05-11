@@ -84,10 +84,10 @@ public class UsuarioController {
     @PutMapping("/preferencias")
     public ResponseEntity<?> actualizarPreferencias(@AuthenticationPrincipal Usuario usuario,
                                                    @Valid @RequestBody Map<String, String> request) {
-        String config = "";
+        String config = usuario.getConfiguracion();
         Map<String, String> configMap = new HashMap<>();
 
-        if (!config.isEmpty()) {
+        if (config != null && !config.isEmpty()) {
             try {
                 configMap = new com.fasterxml.jackson.databind.ObjectMapper().readValue(config, Map.class);
             } catch (Exception e) {

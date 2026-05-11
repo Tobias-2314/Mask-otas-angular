@@ -42,8 +42,8 @@ public class ProductoController {
         Producto producto = productoService.findById(id).orElse(null);
         if (producto == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(Map.of(
-            "id", producto.getId(), "name", producto.getName(), "description", producto.getDescription(),
-            "price", producto.getPrice(), "image", producto.getImage(), "stock", producto.getStock()
+            "id", producto.getId(), "name", producto.getNombre(), "description", producto.getDescripcion(),
+            "price", producto.getPrecio(), "image", producto.getImagen(), "stock", producto.getStock()
         ));
     }
 }

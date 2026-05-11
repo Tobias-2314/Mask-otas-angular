@@ -92,15 +92,12 @@ public class AuthController {
             return ResponseEntity.ok(Map.of("authenticated", false));
         }
         Usuario usuario = (Usuario) authentication.getPrincipal();
-        return ResponseEntity.ok(Map.of(
-            "authenticated", true,
-            "usuario", Map.of(
-                "id", usuario.getId(),
-                "nombre", usuario.getNombre(),
-                "email", usuario.getEmail(),
-                "role", usuario.getRole().toString(),
-                "fotoPerfil", usuario.getFotoPerfil()
-            )
-        ));
+        Map<String, Object> usuarioMap = new HashMap<>();
+        usuarioMap.put("id", usuario.getId());
+        usuarioMap.put("nombre", usuario.getNombre());
+        usuarioMap.put("email", usuario.getEmail());
+        usuarioMap.put("role", usuario.getRole() != null ? usuario.getRole().toString() : "");
+        usuarioMap.put("fotoPerfil", usuario.getFotoPerfil() != null ? usuario.getFotoPerfil() : "");
+        return ResponseEntity.ok(Map.of("authenticated", true, "usuario", usuarioMap));
     }
 }

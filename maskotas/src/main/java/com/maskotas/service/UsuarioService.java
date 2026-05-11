@@ -1,5 +1,6 @@
 package com.maskotas.service;
 
+import com.maskotas.model.RolUsuario;
 import com.maskotas.model.Usuario;
 import com.maskotas.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class UsuarioService {
         usuario.setNombre(nombre);
         usuario.setEmail(email);
         usuario.setContrasena(passwordEncoder.encode(password));
+        usuario.setRole(RolUsuario.USUARIO);
         return usuarioRepository.save(usuario);
     }
 

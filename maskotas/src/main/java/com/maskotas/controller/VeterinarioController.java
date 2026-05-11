@@ -92,5 +92,5 @@ public class VeterinarioController {
 
         citaService.save(cita);
         return ResponseEntity.ok(Map.of("success", true, "message", "Historial clínico actualizado"));
-    }
+}
 }

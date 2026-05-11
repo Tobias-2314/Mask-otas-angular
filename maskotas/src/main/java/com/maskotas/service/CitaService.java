@@ -8,7 +8,6 @@ import com.maskotas.repository.CitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,10 +26,10 @@ public class CitaService {
         );
     }
 
-    public boolean existeCita(LocalDate fecha, LocalTime hora) {
-        return citaRepository.findByFechaPreferidaAndHoraPreferidaAndEstadoIn(
-            fecha, hora, Arrays.asList("pendiente", "confirmada")
-        ).size() > 0;
+    public boolean existeCita(LocalDate fecha, String hora) {
+        return !citaRepository.findByFechaPreferidaAndHoraPreferidaAndEstadoIn(
+            fecha, hora, Arrays.asList(EstadoCita.PENDIENTE, EstadoCita.CONFIRMADA)
+        ).isEmpty();
     }
 
     public Cita save(Cita cita) {
@@ -55,7 +54,7 @@ public class CitaService {
 
     public Cita crearCita(Usuario usuario, Mascota mascota, String nombreDueno, String email,
                           String telefono, String nombreMascota, String tipoMascota,
-                          String tipoServicio, LocalDate fecha, LocalTime hora, String notas) {
+                          String tipoServicio, LocalDate fecha, String hora, String notas) {
         Cita cita = new Cita();
         cita.setUsuario(usuario);
         cita.setNombreDueno(nombreDueno);

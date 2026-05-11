@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -45,7 +46,7 @@ public class CitaController {
         }
 
         cita.setUsuario(usuario);
-        
+
         if (cita.getMascota() != null) {
             Mascota mascota = mascotaService.findById(cita.getMascota().getId()).orElse(null);
             if (mascota != null) {
@@ -86,21 +87,21 @@ public class CitaController {
         Cita cita = citaService.findById(id).orElse(null);
         if (cita == null) return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(Map.of(
-            "id", cita.getId(),
-            "nombreDueno", cita.getNombreDueno(),
-            "email", cita.getEmail(),
-            "telefono", cita.getTelefono(),
-            "nombreMascota", cita.getNombreMascota(),
-            "tipoMascota", cita.getTipoMascota(),
-            "tipoServicio", cita.getTipoServicio(),
-            "fechaPreferida", cita.getFechaPreferida(),
-            "horaPreferida", cita.getHoraPreferida(),
-            "estado", cita.getEstado() != null ? cita.getEstado().toString() : "",
-            "diagnostico", cita.getDiagnostico(),
-            "tratamiento", cita.getTratamiento(),
-            "notasInternas", cita.getNotasInternas()
-        ));
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", cita.getId());
+        response.put("nombreDueno", cita.getNombreDueno());
+        response.put("email", cita.getEmail());
+        response.put("telefono", cita.getTelefono());
+        response.put("nombreMascota", cita.getNombreMascota());
+        response.put("tipoMascota", cita.getTipoMascota());
+        response.put("tipoServicio", cita.getTipoServicio());
+        response.put("fechaPreferida", cita.getFechaPreferida());
+        response.put("horaPreferida", cita.getHoraPreferida());
+        response.put("estado", cita.getEstado() != null ? cita.getEstado().toString() : "");
+        response.put("diagnostico", cita.getDiagnostico());
+        response.put("tratamiento", cita.getTratamiento());
+        response.put("notasInternas", cita.getNotasInternas());
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")

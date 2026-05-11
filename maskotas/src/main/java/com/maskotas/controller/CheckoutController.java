@@ -1,5 +1,6 @@
 package com.maskotas.controller;
 
+import com.maskotas.model.CartItem;
 import com.maskotas.model.Order;
 import com.maskotas.model.OrderItem;
 import com.maskotas.model.Producto;
@@ -61,23 +62,4 @@ public class CheckoutController {
         session.removeAttribute("cart");
         return ResponseEntity.ok(Map.of("success", true, "orderId", order.getId()));
     }
-}
-
-class CartItem {
-    private String id;
-    private String name;
-    private Integer quantity;
-    private BigDecimal price;
-    private String image;
-
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
-    public BigDecimal getPrice() { return price; }
-    public void setPrice(BigDecimal price) { this.price = price; }
-    public String getImage() { return image; }
-    public void setImage(String image) { this.image = image; }
 }
