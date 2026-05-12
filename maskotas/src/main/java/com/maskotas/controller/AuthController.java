@@ -2,6 +2,8 @@ package com.maskotas.controller;
 
 import com.maskotas.model.Usuario;
 import com.maskotas.service.UsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.HashMap;
@@ -24,13 +28,22 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private SecurityContextRepository securityContextRepository;
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody Map<String, String> request) {
+    public ResponseEntity<?> login(@Valid @RequestBody Map<String, String> request,
+                                   HttpServletRequest httpRequest,
+                                   HttpServletResponse httpResponse) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.get("email"), request.get("password"))
         );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+        securityContextRepository.saveContext(context, httpRequest, httpResponse);
+
         Usuario usuario = (Usuario) authentication.getPrincipal();
 
         String redirect = "/";
@@ -50,7 +63,9 @@ public class AuthController {
     }
 
     @PostMapping("/registro")
-    public ResponseEntity<?> registro(@Valid @RequestBody Map<String, String> request) {
+    public ResponseEntity<?> registro(@Valid @RequestBody Map<String, String> request,
+                                      HttpServletRequest httpRequest,
+                                      HttpServletResponse httpResponse) {
         if (!request.get("password").equals(request.get("password_confirmation"))) {
             return ResponseEntity.badRequest().body(Map.of("error", "Las contraseñas no coinciden"));
         }
@@ -65,7 +80,11 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.get("email"), request.get("password"))
         );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+        securityContextRepository.saveContext(context, httpRequest, httpResponse);
 
         return ResponseEntity.ok(Map.of(
             "success", true,
