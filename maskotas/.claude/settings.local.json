@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/e/exercise3-feactures-Tobias/Mask-otas-angular/maskotas-frontend/src/router/**)",
+      "Read(//mnt/e/exercise3-feactures-Tobias/Mask-otas-angular/maskotas-frontend/src/stores/**)",
+      "Read(//mnt/e/exercise3-feactures-Tobias/Mask-otas-angular/maskotas-frontend/src/api/**)",
+      "Bash(sed \"s/.*import\\('//;s/'\\).*//\")",
+      "Read(//mnt/e/exercise3-feactures-Tobias/Mask-otas-angular/maskotas-frontend/src/views/**)",
+      "Bash(xargs cat)",
+      "Bash(./gradlew compileJava)",
+      "Bash(bash gradlew compileJava)",
+      "Bash(java -version)",
+      "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular ls-tree -r main --name-only)",
+      "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/servicios.blade.php)",
+      "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/contacto.blade.php)",
+      "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/resenas/index.blade.php)",
+      "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/checkout.blade.php)",
+      "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/politica-privacidad.blade.php)",
+      "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/politica-cookies.blade.php)",
+      "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/terminos-servicio.blade.php)",
+      "Bash(git *)"
+    ]
+  }
+}
