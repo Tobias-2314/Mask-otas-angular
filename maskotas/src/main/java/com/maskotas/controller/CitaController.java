@@ -45,6 +45,7 @@ public class CitaController {
         }
 
         cita.setUsuario(usuario);
+        cita.setEstado(com.maskotas.model.EstadoCita.PENDIENTE);
 
         if (cita.getMascota() != null) {
             Mascota mascota = mascotaService.findById(cita.getMascota().getId()).orElse(null);

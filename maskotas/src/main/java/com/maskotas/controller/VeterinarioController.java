@@ -61,10 +61,21 @@ public class VeterinarioController {
         response.put("diagnostico", cita.getDiagnostico());
         response.put("tratamiento", cita.getTratamiento());
         response.put("notasInternas", cita.getNotasInternas());
-        response.put("mascota", cita.getMascota() != null ? Map.of(
-            "id", cita.getMascota().getId(),
-            "nombre", cita.getMascota().getNombre()
-        ) : null);
+        if (cita.getMascota() != null) {
+            var m = cita.getMascota();
+            Map<String, Object> mascotaMap = new java.util.HashMap<>();
+            mascotaMap.put("id", m.getId());
+            mascotaMap.put("nombre", m.getNombre() != null ? m.getNombre() : "");
+            mascotaMap.put("tipo", m.getTipo() != null ? m.getTipo() : "");
+            mascotaMap.put("raza", m.getRaza() != null ? m.getRaza() : "");
+            mascotaMap.put("genero", m.getGenero() != null ? m.getGenero() : "");
+            mascotaMap.put("edad", m.getEdad());
+            mascotaMap.put("peso", m.getPeso());
+            mascotaMap.put("notasMedicas", m.getNotasMedicas() != null ? m.getNotasMedicas() : "");
+            response.put("mascota", mascotaMap);
+        } else {
+            response.put("mascota", null);
+        }
 
         return ResponseEntity.ok(response);
     }

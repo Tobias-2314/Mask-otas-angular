@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -24,13 +25,18 @@ public class MascotaController {
 
     @GetMapping
     public ResponseEntity<?> index(@AuthenticationPrincipal Usuario usuario) {
-        return ResponseEntity.ok(mascotaService.findByUsuarioId(usuario.getId()).stream().map(m -> Map.of(
-            "id", m.getId(),
-            "nombre", m.getNombre(),
-            "tipo", m.getTipo(),
-            "raza", m.getRaza(),
-            "edad", m.getEdad()
-        )).toList());
+        return ResponseEntity.ok(mascotaService.findByUsuarioId(usuario.getId()).stream().map(m -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", m.getId());
+            map.put("nombre", m.getNombre() != null ? m.getNombre() : "");
+            map.put("tipo", m.getTipo() != null ? m.getTipo() : "");
+            map.put("raza", m.getRaza() != null ? m.getRaza() : "");
+            map.put("genero", m.getGenero() != null ? m.getGenero() : "");
+            map.put("edad", m.getEdad());
+            map.put("peso", m.getPeso());
+            map.put("notasMedicas", m.getNotasMedicas() != null ? m.getNotasMedicas() : "");
+            return map;
+        }).toList());
     }
 
     @PostMapping
