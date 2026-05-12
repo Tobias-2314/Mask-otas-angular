@@ -22,17 +22,52 @@
         <!-- Mascotas -->
         <div class="card">
           <h2 class="section-head">Mis mascotas</h2>
-          <div v-if="data.mascotas?.length === 0" class="muted-text">Sin mascotas registradas.</div>
+          <div v-if="data.mascotas?.length === 0" class="muted-text" style="margin-bottom:.75rem">Sin mascotas registradas.</div>
           <ul class="simple-list">
-            <li v-for="m in data.mascotas" :key="m.id">
-              🐾 {{ m.nombre }} <span class="muted-text">({{ m.tipo }})</span>
-              <button class="btn btn-danger btn-sm" style="float:right" @click="eliminarMascota(m.id)">✕</button>
+            <li v-for="m in data.mascotas" :key="m.id" class="mascota-item">
+              <div>
+                <span class="mascota-nombre">🐾 {{ m.nombre }}</span>
+                <span class="muted-text"> ({{ m.tipo }}<span v-if="m.raza"> - {{ m.raza }}</span>)</span>
+                <span v-if="m.edad" class="muted-text">, {{ m.edad }} años</span>
+              </div>
+              <button class="btn btn-danger btn-sm" @click="eliminarMascota(m.id)">✕</button>
             </li>
           </ul>
-          <form @submit.prevent="agregarMascota" class="mini-form">
-            <input v-model="nuevaMascota.nombre" placeholder="Nombre" required />
-            <input v-model="nuevaMascota.tipo" placeholder="Tipo (perro, gato…)" required />
-            <button class="btn btn-primary btn-sm" type="submit">Agregar</button>
+          <button class="btn btn-outline btn-sm" style="margin-bottom:.75rem" @click="showMascotaForm = !showMascotaForm">
+            {{ showMascotaForm ? 'Cancelar' : '+ Agregar mascota' }}
+          </button>
+          <form v-if="showMascotaForm" @submit.prevent="agregarMascota" class="mascota-form">
+            <div class="form-row2">
+              <div class="form-group"><label>Nombre *</label><input v-model="nuevaMascota.nombre" required placeholder="Nombre" /></div>
+              <div class="form-group">
+                <label>Tipo *</label>
+                <select v-model="nuevaMascota.tipo" required>
+                  <option value="">Seleccionar…</option>
+                  <option value="Perro">Perro</option>
+                  <option value="Gato">Gato</option>
+                  <option value="Ave">Ave</option>
+                  <option value="Conejo">Conejo</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row2">
+              <div class="form-group"><label>Raza</label><input v-model="nuevaMascota.raza" placeholder="Opcional" /></div>
+              <div class="form-group">
+                <label>Género</label>
+                <select v-model="nuevaMascota.genero">
+                  <option value="">Desconocido</option>
+                  <option value="Macho">Macho</option>
+                  <option value="Hembra">Hembra</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row2">
+              <div class="form-group"><label>Edad (años)</label><input v-model.number="nuevaMascota.edad" type="number" min="0" placeholder="0" /></div>
+              <div class="form-group"><label>Peso (kg)</label><input v-model.number="nuevaMascota.peso" type="number" step="0.1" min="0" placeholder="0.0" /></div>
+            </div>
+            <div class="form-group"><label>Notas médicas / Alergias</label><textarea v-model="nuevaMascota.notasMedicas" rows="2" placeholder="Información de salud relevante…"></textarea></div>
+            <button class="btn btn-primary btn-sm" type="submit">Registrar mascota</button>
           </form>
         </div>
 
@@ -113,7 +148,8 @@ const perfilMsg = ref(''); const perfilOk = ref(false)
 const prefs = ref({ theme: 'light', font_size: 'medium' })
 const prefsMsg = ref(''); const prefsOk = ref(false)
 
-const nuevaMascota = ref({ nombre: '', tipo: '' })
+const showMascotaForm = ref(false)
+const nuevaMascota = ref({ nombre: '', tipo: '', raza: '', genero: '', edad: null, peso: null, notasMedicas: '' })
 const resena = ref({ calificacion: 5, comentario: '' })
 const resenaMsg = ref(''); const resenaOk = ref(false)
 
@@ -143,7 +179,8 @@ async function agregarMascota() {
     await crearMascota(nuevaMascota.value)
     const { data: d } = await getMiCuenta()
     data.value = d
-    nuevaMascota.value = { nombre: '', tipo: '' }
+    nuevaMascota.value = { nombre: '', tipo: '', raza: '', genero: '', edad: null, peso: null, notasMedicas: '' }
+    showMascotaForm.value = false
   } catch (e) { alert(e.response?.data?.error || 'Error') }
 }
 
@@ -169,9 +206,9 @@ async function publicarResena() {
 .section-head { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--primary); }
 .muted-text { font-size: .85rem; color: var(--muted); }
 .simple-list { list-style: none; display: flex; flex-direction: column; gap: .5rem; margin-bottom: .75rem; }
-.simple-list li { font-size: .9rem; }
-.mini-form { display: flex; gap: .5rem; margin-top: .75rem; flex-wrap: wrap; }
-.mini-form input { flex: 1; padding: .45rem .75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: .85rem; min-width: 100px; }
-.mini-form input:focus { outline: none; border-color: var(--primary); }
+.mascota-item { font-size: .9rem; display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; }
+.mascota-nombre { font-weight: 600; }
+.mascota-form { display: flex; flex-direction: column; gap: .5rem; border-top: 1px solid var(--border); padding-top: .75rem; margin-top: .25rem; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
 </style>

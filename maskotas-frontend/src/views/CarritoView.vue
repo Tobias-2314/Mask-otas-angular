@@ -42,12 +42,8 @@
 
       <div class="cart-footer card">
         <span class="total-label">Total: <strong>${{ cart.total }}</strong></span>
-        <button class="btn btn-primary" :disabled="procesando" @click="checkout">
-          {{ procesando ? 'Procesando…' : 'Finalizar compra' }}
-        </button>
+        <RouterLink to="/checkout" class="btn btn-primary">Finalizar compra</RouterLink>
       </div>
-
-      <div v-if="msg" :class="['alert', success ? 'alert-success' : 'alert-error']" style="margin-top:1rem">{{ msg }}</div>
     </div>
   </div>
 </template>
@@ -55,34 +51,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
-import { realizarCheckout } from '../api/checkout'
 
 const cart = useCartStore()
 const loading = ref(true)
-const procesando = ref(false)
-const msg = ref('')
-const success = ref(false)
 
 onMounted(async () => {
   await cart.fetch()
   loading.value = false
 })
-
-async function checkout() {
-  procesando.value = true
-  msg.value = ''
-  try {
-    await realizarCheckout()
-    await cart.fetch()
-    msg.value = 'Compra realizada con éxito. ¡Gracias!'
-    success.value = true
-  } catch (e) {
-    msg.value = e.response?.data?.error || 'Error al procesar'
-    success.value = false
-  } finally {
-    procesando.value = false
-  }
-}
 </script>
 
 <style scoped>

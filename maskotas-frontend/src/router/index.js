@@ -3,9 +3,16 @@ import { useAuthStore } from '../stores/auth'
 
 const routes = [
   { path: '/', component: () => import('../views/HomeView.vue') },
+  { path: '/servicios', component: () => import('../views/ServiciosView.vue') },
+  { path: '/contacto', component: () => import('../views/ContactoView.vue') },
+  { path: '/resenas', component: () => import('../views/ResenasView.vue') },
+  { path: '/politica-cookies', component: () => import('../views/PoliticaCookiesView.vue') },
+  { path: '/politica-privacidad', component: () => import('../views/PoliticaPrivacidadView.vue') },
+  { path: '/terminos-servicio', component: () => import('../views/TerminosServicioView.vue') },
   { path: '/tienda', component: () => import('../views/TiendaView.vue') },
   { path: '/tienda/:id', component: () => import('../views/ProductoView.vue') },
   { path: '/carrito', component: () => import('../views/CarritoView.vue') },
+  { path: '/checkout', component: () => import('../views/CheckoutView.vue'), meta: { auth: true } },
   { path: '/login', component: () => import('../views/LoginView.vue'), meta: { guest: true } },
   { path: '/registro', component: () => import('../views/RegistroView.vue'), meta: { guest: true } },
   {
@@ -27,7 +34,8 @@ const routes = [
       { path: 'productos', component: () => import('../views/admin/ProductosView.vue') },
       { path: 'usuarios', component: () => import('../views/admin/UsuariosView.vue') },
       { path: 'citas', component: () => import('../views/admin/CitasView.vue') },
-      { path: 'mascotas', component: () => import('../views/admin/MascotasView.vue') }
+      { path: 'mascotas', component: () => import('../views/admin/MascotasView.vue') },
+      { path: 'resenas', component: () => import('../views/admin/ResenasView.vue') }
     ]
   },
   {

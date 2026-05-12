@@ -10,6 +10,7 @@
       <RouterLink to="/admin/usuarios" class="admin-link">Usuarios</RouterLink>
       <RouterLink to="/admin/citas" class="admin-link">Citas</RouterLink>
       <RouterLink to="/admin/mascotas" class="admin-link">Mascotas</RouterLink>
+      <RouterLink to="/admin/resenas" class="admin-link">Reseñas</RouterLink>
     </div>
 
     <div v-if="loading" class="loading">Cargando…</div>

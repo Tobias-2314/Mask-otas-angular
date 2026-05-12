@@ -6,6 +6,7 @@
       <RouterLink to="/admin/usuarios" class="admin-link">Usuarios</RouterLink>
       <RouterLink to="/admin/citas" class="admin-link">Citas</RouterLink>
       <RouterLink to="/admin/mascotas" class="admin-link">Mascotas</RouterLink>
+      <RouterLink to="/admin/resenas" class="admin-link">Reseñas</RouterLink>
     </div>
 
     <div class="page-header"><h1>Citas</h1></div>
