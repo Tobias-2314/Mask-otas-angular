@@ -56,6 +56,7 @@ public class CitaService {
                           String telefono, String nombreMascota, String tipoMascota,
                           String tipoServicio, LocalDate fecha, String hora, String notas) {
         Cita cita = new Cita();
+        cita.setEstado(EstadoCita.PENDIENTE);
         cita.setUsuario(usuario);
         cita.setNombreDueno(nombreDueno);
         cita.setEmail(email);

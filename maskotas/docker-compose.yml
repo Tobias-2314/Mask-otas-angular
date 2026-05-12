@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: maskotas-postgres
+    environment:
+      POSTGRES_DB: maskotas
+      POSTGRES_USER: maskotas
+      POSTGRES_PASSWORD: maskotas123
+    ports:
+      - "5432:5432"
+    volumes:
+      - maskotas_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U maskotas -d maskotas"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  maskotas_postgres_data:

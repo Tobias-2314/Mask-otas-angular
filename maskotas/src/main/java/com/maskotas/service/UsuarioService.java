@@ -4,13 +4,16 @@ import com.maskotas.model.RolUsuario;
 import com.maskotas.model.Usuario;
 import com.maskotas.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -36,6 +39,13 @@ public class UsuarioService {
             }
         }
         return Optional.empty();
+    }
+
+    // Requerido por Spring Security — equivalente al provider 'eloquent' de Laravel
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + email));
     }
 
     public Optional<Usuario> findByEmail(String email) {

@@ -13,7 +13,6 @@ import com.maskotas.model.EstadoCita;
 
 @RestController
 @RequestMapping("/api/veterinario")
-@CrossOrigin(origins = "*")
 public class VeterinarioController {
 
     @Autowired
