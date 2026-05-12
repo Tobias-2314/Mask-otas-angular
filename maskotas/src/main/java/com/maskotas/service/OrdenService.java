@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import java.util.stream.Collectors;
-
 @Service
 public class OrdenService {
 
@@ -29,9 +27,6 @@ public class OrdenService {
     }
 
     public List<Order> findCompletedSince(LocalDateTime since) {
-        return orderRepository.findAll().stream()
-            .filter(o -> o.getFecha() != null
-                && o.getFecha().isAfter(since))
-            .collect(Collectors.toList());
+        return orderRepository.findByFechaAfterOrderByFechaDesc(since);
     }
 }

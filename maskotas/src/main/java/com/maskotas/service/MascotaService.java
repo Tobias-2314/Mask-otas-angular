@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import java.util.stream.Collectors;
-
 @Service
 public class MascotaService {
 
@@ -41,14 +39,9 @@ public class MascotaService {
     }
 
     public List<Mascota> search(String search) {
-        if (search == null || search.isEmpty()) {
+        if (search == null || search.isBlank()) {
             return mascotaRepository.findAll();
         }
-        String lowerSearch = search.toLowerCase();
-        return mascotaRepository.findAll().stream()
-            .filter(m -> m.getNombre().toLowerCase().contains(lowerSearch)
-                || (m.getDueno() != null && m.getDueno().getNombre().toLowerCase().contains(lowerSearch))
-                || (m.getDueno() != null && m.getDueno().getEmail().toLowerCase().contains(lowerSearch)))
-            .collect(Collectors.toList());
+        return mascotaRepository.search(search);
     }
 }

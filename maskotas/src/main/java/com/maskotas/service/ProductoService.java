@@ -5,7 +5,6 @@ import com.maskotas.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,21 +19,14 @@ public class ProductoService {
     }
 
     public List<Producto> findByPriceRange(BigDecimal min, BigDecimal max) {
-        List<Producto> all = productoRepository.findAll();
         if (min != null && max != null) {
-            return all.stream()
-                .filter(p -> BigDecimal.valueOf(p.getPrecio()).compareTo(min) >= 0 && BigDecimal.valueOf(p.getPrecio()).compareTo(max) <= 0)
-                .collect(Collectors.toList());
+            return productoRepository.findByPrecioBetween(min.doubleValue(), max.doubleValue());
         } else if (min != null) {
-            return all.stream()
-                .filter(p -> BigDecimal.valueOf(p.getPrecio()).compareTo(min) >= 0)
-                .collect(Collectors.toList());
+            return productoRepository.findByPrecioGreaterThanEqual(min.doubleValue());
         } else if (max != null) {
-            return all.stream()
-                .filter(p -> BigDecimal.valueOf(p.getPrecio()).compareTo(max) <= 0)
-                .collect(Collectors.toList());
+            return productoRepository.findByPrecioLessThanEqual(max.doubleValue());
         }
-        return all;
+        return productoRepository.findAll();
     }
 
     public List<Producto> findStockInfo() {
