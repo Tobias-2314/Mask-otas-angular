@@ -1,28 +1,38 @@
 <template>
-  <div class="container" style="max-width:700px;padding-top:2rem">
-    <RouterLink to="/tienda" class="btn btn-outline btn-sm" style="margin-bottom:1.5rem">← Volver</RouterLink>
+  <div class="producto-page">
+    <div class="container">
+      <RouterLink to="/tienda" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Volver a la tienda
+      </RouterLink>
 
-    <div v-if="loading" class="loading">Cargando…</div>
-    <div v-else-if="!producto" class="loading">Producto no encontrado.</div>
-    <div v-else class="card producto-detail">
-      <img :src="producto.image || '/placeholder.png'" :alt="producto.name" class="detail-img" />
-      <div class="detail-body">
-        <h1>{{ producto.name }}</h1>
-        <p class="desc">{{ producto.description }}</p>
-        <div class="meta">
-          <span class="price">${{ producto.price }}</span>
-          <span :class="['badge', producto.stock > 0 ? 'badge-green' : 'badge-red']">
+      <div v-if="loading" class="loading">Cargando producto…</div>
+      <div v-else-if="!producto" class="loading">Producto no encontrado.</div>
+      <div v-else class="producto-detail">
+        <div class="producto-img-col">
+          <div class="producto-img-wrap">
+            <img :src="producto.image || '/placeholder.png'" :alt="producto.name" class="producto-img" />
+          </div>
+        </div>
+        <div class="producto-info-col">
+          <span :class="['stock-pill', producto.stock > 0 ? 'in-stock' : 'no-stock']">
             {{ producto.stock > 0 ? `${producto.stock} disponibles` : 'Sin stock' }}
           </span>
+          <h1>{{ producto.name }}</h1>
+          <div class="producto-price">${{ producto.price }}</div>
+          <p class="producto-desc">{{ producto.description }}</p>
+
+          <div v-if="msg" :class="['alert', success ? 'alert-success' : 'alert-error']">{{ msg }}</div>
+
+          <button
+            class="btn btn-primary btn-lg add-btn"
+            :disabled="producto.stock === 0 || loading"
+            @click="agregar"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Agregar al carrito
+          </button>
         </div>
-        <div v-if="msg" :class="['alert', success ? 'alert-success' : 'alert-error']">{{ msg }}</div>
-        <button
-          class="btn btn-primary"
-          :disabled="producto.stock === 0 || loading"
-          @click="agregar"
-        >
-          Agregar al carrito
-        </button>
       </div>
     </div>
   </div>
@@ -64,11 +74,79 @@ async function agregar() {
 </script>
 
 <style scoped>
-.producto-detail { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
-.detail-img { width: 100%; max-height: 320px; object-fit: cover; }
-.detail-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-.detail-body h1 { font-size: 1.6rem; font-weight: 700; }
-.desc { color: var(--muted); line-height: 1.6; }
-.meta { display: flex; align-items: center; gap: 1rem; }
-.price { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+.producto-page { padding: 2.5rem 0 5rem; background: var(--cream); min-height: calc(100vh - 64px); }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+  transition: color 0.18s;
+}
+.back-link:hover { color: var(--forest); }
+
+.producto-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+@media (max-width: 680px) {
+  .producto-detail { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.producto-img-wrap {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: var(--parchment);
+}
+.producto-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.producto-img-wrap:hover .producto-img { transform: scale(1.03); }
+
+.producto-info-col { padding-top: 0.5rem; }
+.stock-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 1rem;
+}
+.in-stock { background: #dcfce7; color: #166534; }
+.no-stock { background: #fee2e2; color: #991b1b; }
+
+.producto-info-col h1 {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 600;
+  color: var(--deep);
+  margin-bottom: 0.75rem;
+}
+.producto-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--forest);
+  margin-bottom: 1.25rem;
+  line-height: 1;
+}
+.producto-desc {
+  font-size: 0.97rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+}
+.add-btn { gap: 0.6rem; }
 </style>

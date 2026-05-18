@@ -7,36 +7,61 @@
     <ChatWidget />
 
     <footer class="footer">
-      <div class="container footer-grid">
-        <div>
-          <h3 class="footer-brand">🐾 MASK!OTAS</h3>
-          <p class="footer-text">Cuidamos a quienes más amas con tecnología de punta y amor incondicional.</p>
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand-col">
+            <div class="footer-logo">MASKOTAS</div>
+            <p class="footer-tagline">Cuidamos a quienes más amas con experiencia médica y amor incondicional.</p>
+            <div class="footer-social">
+              <a href="#" class="social-dot" aria-label="Instagram">ig</a>
+              <a href="#" class="social-dot" aria-label="Facebook">fb</a>
+              <a href="#" class="social-dot" aria-label="Twitter">tw</a>
+            </div>
+          </div>
+
+          <nav class="footer-nav">
+            <div class="footer-col">
+              <h5 class="footer-col-title">Clínica</h5>
+              <ul>
+                <li><RouterLink to="/servicios">Servicios</RouterLink></li>
+                <li><RouterLink to="/tienda">Tienda</RouterLink></li>
+                <li><RouterLink to="/resenas">Reseñas</RouterLink></li>
+                <li><RouterLink to="/citas">Agendar Cita</RouterLink></li>
+              </ul>
+            </div>
+            <div class="footer-col">
+              <h5 class="footer-col-title">Soporte</h5>
+              <ul>
+                <li><RouterLink to="/contacto">Contacto</RouterLink></li>
+                <li><RouterLink to="/mi-cuenta">Mi Cuenta</RouterLink></li>
+              </ul>
+            </div>
+            <div class="footer-col">
+              <h5 class="footer-col-title">Legal</h5>
+              <ul>
+                <li><RouterLink to="/politica-privacidad">Privacidad</RouterLink></li>
+                <li><RouterLink to="/politica-cookies">Cookies</RouterLink></li>
+                <li><RouterLink to="/terminos-servicio">Términos</RouterLink></li>
+              </ul>
+            </div>
+          </nav>
+
+          <div class="footer-contact-col">
+            <h5 class="footer-col-title">Visítanos</h5>
+            <address>
+              <p>Calle Veterinaria 123</p>
+              <p>Madrid, España</p>
+              <p class="footer-contact-link"><a href="tel:+34912345678">+34 912 345 678</a></p>
+              <p class="footer-contact-link"><a href="mailto:info@maskotas.com">info@maskotas.com</a></p>
+            </address>
+          </div>
         </div>
-        <div>
-          <h4 class="footer-heading">Navegación</h4>
-          <ul class="footer-links">
-            <li><RouterLink to="/servicios">Servicios</RouterLink></li>
-            <li><RouterLink to="/tienda">Tienda</RouterLink></li>
-            <li><RouterLink to="/resenas">Reseñas</RouterLink></li>
-            <li><RouterLink to="/contacto">Contacto</RouterLink></li>
-          </ul>
+
+        <div class="footer-bottom">
+          <span>&copy; {{ year }} Maskotas — Clínica Veterinaria</span>
+          <span class="footer-dot">·</span>
+          <span>Todos los derechos reservados</span>
         </div>
-        <div>
-          <h4 class="footer-heading">Legal</h4>
-          <ul class="footer-links">
-            <li><RouterLink to="/politica-privacidad">Política de Privacidad</RouterLink></li>
-            <li><RouterLink to="/politica-cookies">Política de Cookies</RouterLink></li>
-            <li><RouterLink to="/terminos-servicio">Términos de Servicio</RouterLink></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="footer-heading">Contacto</h4>
-          <p class="footer-text">Calle Veterinaria 123, Madrid</p>
-          <p class="footer-text">info@maskotas.com</p>
-        </div>
-      </div>
-      <div class="footer-copy">
-        &copy; {{ year }} MASK!OTAS. Todos los derechos reservados.
       </div>
     </footer>
   </div>
@@ -51,27 +76,104 @@ const year = new Date().getFullYear()
 
 <style scoped>
 .app-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
-main { flex: 1; padding-bottom: 2rem; }
+main { flex: 1; padding-bottom: 2.5rem; }
 
 .footer {
-  background: #111827; color: #fff;
-  padding: 3rem 0 0;
+  background: var(--deep);
+  color: rgba(250,246,238,.75);
+  padding: 4rem 0 0;
   margin-top: auto;
 }
-.footer-grid {
+
+.footer-top {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 2rem;
-  padding-bottom: 2rem;
+  grid-template-columns: 1.6fr 2fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
-.footer-brand { font-size: 1.3rem; font-weight: 800; margin-bottom: .5rem; }
-.footer-heading { font-size: .9rem; font-weight: 700; margin-bottom: .75rem; color: #d1d5db; }
-.footer-text { font-size: .85rem; color: #9ca3af; line-height: 1.6; }
-.footer-links { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
-.footer-links a { font-size: .85rem; color: #9ca3af; text-decoration: none; transition: color .15s; }
-.footer-links a:hover { color: #818cf8; }
-.footer-copy {
-  text-align: center; font-size: .8rem; color: #4b5563;
-  border-top: 1px solid #1f2937; padding: 1.25rem 0;
+@media (max-width: 900px) {
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand-col { grid-column: 1 / -1; }
 }
+@media (max-width: 520px) {
+  .footer-top { grid-template-columns: 1fr; }
+}
+
+.footer-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--cream);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+
+.footer-tagline {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: rgba(250,246,238,.55);
+  max-width: 280px;
+  margin-bottom: 1.5rem;
+}
+
+.footer-social { display: flex; gap: 0.6rem; }
+.social-dot {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+  color: rgba(250,246,238,.6);
+  transition: all 0.2s;
+}
+.social-dot:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.footer-nav { display: flex; gap: 3rem; }
+@media (max-width: 600px) { .footer-nav { gap: 1.5rem; flex-wrap: wrap; } }
+
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+.footer-col a {
+  font-size: 0.85rem;
+  color: rgba(250,246,238,.55);
+  transition: color 0.18s;
+}
+.footer-col a:hover { color: var(--gold); }
+
+.footer-col-title {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(253,249,243,.35);
+  margin-bottom: 1rem;
+}
+
+.footer-contact-col address { font-style: normal; }
+.footer-contact-col p {
+  font-size: 0.85rem;
+  color: rgba(250,246,238,.55);
+  line-height: 1.9;
+}
+.footer-contact-link a {
+  color: rgba(250,246,238,.7);
+  transition: color 0.18s;
+}
+.footer-contact-link a:hover { color: var(--gold); }
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 1.25rem 0;
+  font-size: 0.78rem;
+  color: rgba(250,246,238,.25);
+}
+.footer-dot { opacity: 0.4; }
 </style>

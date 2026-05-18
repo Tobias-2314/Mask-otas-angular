@@ -18,7 +18,8 @@
       "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/politica-privacidad.blade.php)",
       "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/politica-cookies.blade.php)",
       "Bash(git -C /mnt/e/exercise3-feactures-Tobias/Mask-otas-angular show main:proyecto-veterinaria-laravel/resources/views/terminos-servicio.blade.php)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(cmd.exe *)"
     ]
   }
 }

@@ -9,3 +9,4 @@ public class MaskotasApplication {
         SpringApplication.run(MaskotasApplication.class, args);
     }
 }
+
