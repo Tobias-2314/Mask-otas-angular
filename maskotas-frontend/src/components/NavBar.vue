@@ -24,6 +24,9 @@
       </div>
 
       <div class="nav-actions">
+        <RouterLink v-if="auth.isAdmin" to="/admin/dashboard" class="btn btn-panel btn-sm">Admin</RouterLink>
+        <RouterLink v-else-if="auth.isVeterinario" to="/veterinario/dashboard" class="btn btn-panel btn-sm">Mi Panel</RouterLink>
+
         <RouterLink to="/carrito" class="cart-btn" title="Carrito">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span v-if="cart.count > 0" class="cart-badge">{{ cart.count }}</span>
@@ -183,6 +186,18 @@ async function handleLogout() {
 .nav-links a.router-link-active::after { transform: scaleX(1); }
 .admin-link { color: var(--gold) !important; }
 .admin-link::after { background: var(--gold) !important; }
+
+.btn-panel {
+  background: var(--gold);
+  color: var(--deep);
+  border-color: var(--gold);
+  font-weight: 700;
+}
+.btn-panel:hover {
+  background: var(--deep);
+  color: var(--gold);
+  border-color: var(--deep);
+}
 
 .nav-actions {
   display: flex;

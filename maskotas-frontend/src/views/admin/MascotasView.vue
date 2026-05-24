@@ -1,16 +1,19 @@
 <template>
-  <div class="container" style="padding-top:2rem">
-    <div class="admin-nav">
+  <div class="container admin-page">
+    <nav class="admin-nav">
       <RouterLink to="/admin/dashboard" class="admin-link">Dashboard</RouterLink>
       <RouterLink to="/admin/productos" class="admin-link">Productos</RouterLink>
       <RouterLink to="/admin/usuarios" class="admin-link">Usuarios</RouterLink>
       <RouterLink to="/admin/citas" class="admin-link">Citas</RouterLink>
       <RouterLink to="/admin/mascotas" class="admin-link">Mascotas</RouterLink>
+      <RouterLink to="/admin/resenas" class="admin-link">Reseñas</RouterLink>
+    </nav>
+
+    <div class="admin-header">
+      <h1>Mascotas</h1>
     </div>
 
-    <div class="page-header"><h1>Mascotas</h1></div>
-
-    <div class="card" style="margin-bottom:1.25rem;padding:.75rem">
+    <div class="card" style="margin-bottom:1.25rem">
       <form @submit.prevent="buscar" class="search-row">
         <input v-model="search" placeholder="Buscar por nombre o dueño…" />
         <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
@@ -19,7 +22,8 @@
     </div>
 
     <div v-if="loading" class="loading">Cargando…</div>
-    <div v-else-if="!selected" class="card" style="padding:0;overflow:hidden">
+
+    <div v-else-if="!selected" class="card table-card">
       <table class="table">
         <thead><tr><th>ID</th><th>Nombre</th><th>Tipo</th><th>Dueño</th><th></th></tr></thead>
         <tbody>
@@ -28,20 +32,22 @@
             <td>{{ m.nombre }}</td>
             <td>{{ m.tipo }}</td>
             <td>{{ m.dueno }}</td>
-            <td><button class="btn btn-outline btn-sm" @click="verDetalle(m.id)">Ver historial</button></td>
+            <td>
+              <button class="btn btn-outline btn-sm" @click="verDetalle(m.id)">Ver historial</button>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div v-else class="card">
-      <button class="btn btn-outline btn-sm" style="margin-bottom:1rem" @click="selected = null">← Volver</button>
-      <h2 style="font-size:1.1rem;font-weight:700">{{ selected.nombre }} ({{ selected.tipo }})</h2>
-      <p style="color:var(--muted);font-size:.9rem;margin:.25rem 0 1rem">Dueño: {{ selected.dueno?.nombre }}</p>
+      <button class="btn btn-outline btn-sm" style="margin-bottom:1.25rem" @click="selected = null">← Volver</button>
+      <h2 class="section-head">{{ selected.nombre }} ({{ selected.tipo }})</h2>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.25rem">Dueño: {{ selected.dueno?.nombre }}</p>
 
-      <h3 style="font-size:.95rem;font-weight:600;margin-bottom:.75rem">Historial médico</h3>
-      <div v-if="selected.historial?.length === 0" style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Sin registros.</div>
-      <table v-else class="table" style="margin-bottom:1.25rem">
+      <h3 class="subsection-head">Historial médico</h3>
+      <div v-if="!selected.historial?.length" class="loading">Sin registros.</div>
+      <table v-else class="table" style="margin-bottom:1.5rem">
         <thead><tr><th>Fecha</th><th>Tipo</th><th>Descripción</th></tr></thead>
         <tbody>
           <tr v-for="h in selected.historial" :key="h.id">
@@ -52,7 +58,7 @@
         </tbody>
       </table>
 
-      <h3 style="font-size:.95rem;font-weight:600;margin-bottom:.75rem">Agregar entrada</h3>
+      <h3 class="subsection-head">Agregar entrada</h3>
       <form @submit.prevent="guardarHistorial">
         <div class="form-row">
           <div class="form-group"><label>Tipo</label><input v-model="hForm.tipo" required /></div>
@@ -105,13 +111,3 @@ async function guardarHistorial() {
 
 onMounted(() => cargar())
 </script>
-
-<style scoped>
-.admin-nav { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-.admin-link { padding: .4rem .9rem; border-radius: 8px; font-size: .85rem; font-weight: 600; background: var(--card); border: 1.5px solid var(--border); color: var(--text); }
-.admin-link:hover, .admin-link.router-link-active { background: var(--primary); color: #fff; border-color: var(--primary); }
-.search-row { display: flex; gap: .5rem; }
-.search-row input { flex: 1; padding: .45rem .75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: .9rem; }
-.search-row input:focus { outline: none; border-color: var(--primary); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-</style>

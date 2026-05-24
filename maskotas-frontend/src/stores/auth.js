@@ -7,8 +7,8 @@ export const useAuthStore = defineStore('auth', () => {
   const checked = ref(false)
 
   const isAuthenticated = computed(() => !!usuario.value)
-  const isAdmin = computed(() => usuario.value?.role === 'ROLE_ADMIN')
-  const isVeterinario = computed(() => usuario.value?.role === 'ROLE_VETERINARIO' || isAdmin.value)
+  const isAdmin = computed(() => usuario.value?.role === 'ADMIN')
+  const isVeterinario = computed(() => usuario.value?.role === 'VETERINARIO' || isAdmin.value)
 
   async function fetchMe() {
     try {

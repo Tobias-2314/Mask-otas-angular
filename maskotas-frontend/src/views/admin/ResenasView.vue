@@ -1,17 +1,17 @@
 <template>
-  <div class="container" style="padding-top:2rem">
-    <div class="admin-nav">
+  <div class="container admin-page">
+    <nav class="admin-nav">
       <RouterLink to="/admin/dashboard" class="admin-link">Dashboard</RouterLink>
       <RouterLink to="/admin/productos" class="admin-link">Productos</RouterLink>
       <RouterLink to="/admin/usuarios" class="admin-link">Usuarios</RouterLink>
       <RouterLink to="/admin/citas" class="admin-link">Citas</RouterLink>
       <RouterLink to="/admin/mascotas" class="admin-link">Mascotas</RouterLink>
       <RouterLink to="/admin/resenas" class="admin-link">Reseñas</RouterLink>
-    </div>
+    </nav>
 
-    <div class="page-header">
+    <div class="admin-header">
       <h1>Reseñas</h1>
-      <span v-if="!loading" style="color:var(--muted);font-size:.9rem">{{ resenas.length }} en total</span>
+      <span v-if="!loading">{{ resenas.length }} en total</span>
     </div>
 
     <div v-if="loading" class="loading">Cargando…</div>
@@ -19,14 +19,14 @@
     <div v-else class="resenas-grid">
       <div v-for="r in resenas" :key="r.id" class="card resena-card">
         <div class="resena-header">
-          <div class="avatar">{{ (r.usuario?.nombre || 'U').charAt(0).toUpperCase() }}</div>
+          <div class="resena-avatar">{{ (r.usuario?.nombre || 'U').charAt(0).toUpperCase() }}</div>
           <div>
-            <div class="autor">{{ r.usuario?.nombre || 'Usuario' }}</div>
-            <div class="fecha">{{ r.fecha ? new Date(r.fecha).toLocaleDateString('es-ES') : '—' }}</div>
+            <div class="resena-autor">{{ r.usuario?.nombre || 'Usuario' }}</div>
+            <div class="resena-fecha">{{ r.fecha ? new Date(r.fecha).toLocaleDateString('es-ES') : '—' }}</div>
           </div>
-          <div class="stars">{{ '★'.repeat(r.valoracion ?? r.calificacion ?? 0) }}</div>
+          <div class="resena-stars">{{ '★'.repeat(r.valoracion ?? r.calificacion ?? 0) }}</div>
         </div>
-        <p class="comentario">{{ r.comentario }}</p>
+        <p class="resena-comentario">{{ r.comentario }}</p>
         <div class="resena-actions">
           <button class="btn btn-danger btn-sm" @click="eliminar(r.id)" :disabled="eliminando === r.id">
             {{ eliminando === r.id ? '…' : 'Eliminar' }}
@@ -65,25 +65,3 @@ async function eliminar(id) {
   }
 }
 </script>
-
-<style scoped>
-.resenas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.25rem;
-}
-.resena-card { display: flex; flex-direction: column; gap: .75rem; }
-.resena-header { display: flex; align-items: center; gap: .75rem; }
-.avatar {
-  width: 2.5rem; height: 2.5rem; border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), #7c3aed);
-  color: #fff; display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: .9rem; flex-shrink: 0;
-}
-.autor { font-weight: 600; font-size: .9rem; }
-.fecha { font-size: .75rem; color: var(--muted); }
-.stars { margin-left: auto; color: #f59e0b; font-size: 1rem; }
-.comentario { color: var(--muted); font-size: .9rem; flex: 1; }
-.resena-actions { border-top: 1px solid var(--border); padding-top: .75rem; }
-.resena-actions .btn { width: 100%; }
-</style>

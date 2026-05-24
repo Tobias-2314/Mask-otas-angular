@@ -1,20 +1,20 @@
 <template>
-  <div class="container" style="padding-top:2rem">
-    <div class="admin-nav">
+  <div class="container admin-page">
+    <nav class="admin-nav">
       <RouterLink to="/admin/dashboard" class="admin-link">Dashboard</RouterLink>
       <RouterLink to="/admin/productos" class="admin-link">Productos</RouterLink>
       <RouterLink to="/admin/usuarios" class="admin-link">Usuarios</RouterLink>
       <RouterLink to="/admin/citas" class="admin-link">Citas</RouterLink>
       <RouterLink to="/admin/mascotas" class="admin-link">Mascotas</RouterLink>
       <RouterLink to="/admin/resenas" class="admin-link">Reseñas</RouterLink>
-    </div>
+    </nav>
 
-    <div class="page-header">
+    <div class="admin-header">
       <h1>Usuarios</h1>
     </div>
 
     <div v-if="loading" class="loading">Cargando…</div>
-    <div v-else class="card" style="padding:0;overflow:hidden">
+    <div v-else class="card table-card">
       <table class="table">
         <thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th></th></tr></thead>
         <tbody>
@@ -60,9 +60,3 @@ async function eliminar(id) {
 
 onMounted(cargar)
 </script>
-
-<style scoped>
-.admin-nav { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-.admin-link { padding: .4rem .9rem; border-radius: 8px; font-size: .85rem; font-weight: 600; background: var(--card); border: 1.5px solid var(--border); color: var(--text); transition: background .15s; }
-.admin-link:hover, .admin-link.router-link-active { background: var(--primary); color: #fff; border-color: var(--primary); }
-</style>

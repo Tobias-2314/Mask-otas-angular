@@ -1,21 +1,21 @@
 <template>
-  <div class="container" style="padding-top:2rem">
-    <div class="admin-nav">
+  <div class="container admin-page">
+    <nav class="admin-nav">
       <RouterLink to="/admin/dashboard" class="admin-link">Dashboard</RouterLink>
       <RouterLink to="/admin/productos" class="admin-link">Productos</RouterLink>
       <RouterLink to="/admin/usuarios" class="admin-link">Usuarios</RouterLink>
       <RouterLink to="/admin/citas" class="admin-link">Citas</RouterLink>
       <RouterLink to="/admin/mascotas" class="admin-link">Mascotas</RouterLink>
       <RouterLink to="/admin/resenas" class="admin-link">Reseñas</RouterLink>
-    </div>
+    </nav>
 
-    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+    <div class="admin-header">
       <h1>Productos</h1>
-      <button class="btn btn-primary" @click="abrirForm()">+ Nuevo producto</button>
+      <button class="btn btn-primary btn-sm" @click="abrirForm()">+ Nuevo producto</button>
     </div>
 
     <div v-if="showForm" class="card" style="margin-bottom:1.5rem">
-      <h2 style="font-size:1rem;font-weight:700;margin-bottom:1rem">{{ editando ? 'Editar' : 'Nuevo' }} producto</h2>
+      <h2 class="section-head">{{ editando ? 'Editar' : 'Nuevo' }} producto</h2>
       <form @submit.prevent="guardar">
         <div class="form-row">
           <div class="form-group"><label>Nombre</label><input v-model="form.nombre" required /></div>
@@ -27,25 +27,23 @@
         </div>
         <div class="form-group"><label>Descripción</label><textarea v-model="form.descripcion" rows="2"></textarea></div>
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary btn-sm" :disabled="saving">
-            {{ saving ? '…' : 'Guardar' }}
-          </button>
+          <button type="submit" class="btn btn-primary btn-sm" :disabled="saving">{{ saving ? '…' : 'Guardar' }}</button>
           <button type="button" class="btn btn-outline btn-sm" @click="showForm = false">Cancelar</button>
         </div>
       </form>
     </div>
 
     <div v-if="loading" class="loading">Cargando…</div>
-    <div v-else class="card" style="padding:0;overflow:hidden">
+    <div v-else class="card table-card">
       <table class="table">
-        <thead><tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+        <thead><tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th></th></tr></thead>
         <tbody>
           <tr v-for="p in productos" :key="p.id">
             <td>#{{ p.id }}</td>
             <td>{{ p.name }}</td>
             <td>${{ p.price }}</td>
             <td>{{ p.stock }}</td>
-            <td class="actions">
+            <td class="row-actions">
               <button class="btn btn-outline btn-sm" @click="abrirForm(p)">Editar</button>
               <button class="btn btn-danger btn-sm" @click="eliminar(p.id)">Eliminar</button>
             </td>
@@ -76,7 +74,9 @@ async function cargar() {
 
 function abrirForm(p = null) {
   editando.value = p?.id || null
-  form.value = p ? { nombre: p.name, precio: p.price, stock: p.stock, imagen: '', descripcion: '' } : { nombre: '', precio: '', stock: '', imagen: '', descripcion: '' }
+  form.value = p
+    ? { nombre: p.name, precio: p.price, stock: p.stock, imagen: '', descripcion: '' }
+    : { nombre: '', precio: '', stock: '', imagen: '', descripcion: '' }
   showForm.value = true
 }
 
@@ -103,12 +103,3 @@ async function eliminar(id) {
 
 onMounted(cargar)
 </script>
-
-<style scoped>
-.admin-nav { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-.admin-link { padding: .4rem .9rem; border-radius: 8px; font-size: .85rem; font-weight: 600; background: var(--card); border: 1.5px solid var(--border); color: var(--text); transition: background .15s; }
-.admin-link:hover, .admin-link.router-link-active { background: var(--primary); color: #fff; border-color: var(--primary); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.form-actions { display: flex; gap: .5rem; }
-.actions { display: flex; gap: .5rem; }
-</style>
