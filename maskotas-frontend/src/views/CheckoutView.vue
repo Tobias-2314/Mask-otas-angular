@@ -1,10 +1,10 @@
 <template>
-  <div class="container" style="max-width:960px;padding-top:2rem">
-    <div class="page-header" style="text-align:center"><h1>Finalizar Compra</h1></div>
+  <div class="container checkout-container">
+    <div class="page-header"><h1>Finalizar Compra</h1></div>
 
     <div v-if="cart.items.length === 0" class="empty-cart">
       <p>Tu carrito está vacío.</p>
-      <RouterLink to="/tienda" class="btn btn-primary" style="margin-top:1rem">Ir a la tienda</RouterLink>
+      <RouterLink to="/tienda" class="btn btn-primary btn-mt">Ir a la tienda</RouterLink>
     </div>
 
     <div v-else class="checkout-layout">
@@ -45,43 +45,43 @@
           </div>
         </div>
 
-        <div class="card" style="margin-top:1.5rem">
-          <h2 style="font-size:1rem;font-weight:700;margin-bottom:1.25rem">Datos de Pago (Simulado)</h2>
+        <div class="card payment-card">
+          <h2 class="payment-title">Datos de Pago (Simulado)</h2>
 
-          <div v-if="exito" class="alert alert-success" style="text-align:center">
-            <div style="font-size:2rem;margin-bottom:.5rem">✓</div>
+          <!-- role="alert" anuncia el éxito del pago a lectores de pantalla -->
+          <div v-if="exito" class="alert alert-success pago-exito" role="alert" aria-live="assertive">
+            <div class="pago-check" aria-hidden="true">✓</div>
             <strong>¡Pago realizado con éxito!</strong><br>
             Pedido <code>#{{ ordenId }}</code> confirmado.
-            <div style="margin-top:1rem">
+            <div class="pago-actions">
               <RouterLink to="/mi-cuenta" class="btn btn-primary">Ver Mis Pedidos</RouterLink>
             </div>
           </div>
 
           <form v-else @submit.prevent="pagar">
             <div class="form-group">
-              <label>Nombre en la tarjeta</label>
-              <input v-model="form.titular" required placeholder="Como aparece en la tarjeta" @input="form.titular = form.titular.toUpperCase()" />
+              <label for="pago-titular">Nombre en la tarjeta</label>
+              <input id="pago-titular" v-model="form.titular" required placeholder="Como aparece en la tarjeta" autocomplete="cc-name" @input="form.titular = form.titular.toUpperCase()" />
             </div>
             <div class="form-group">
-              <label>Número de Tarjeta</label>
-              <input v-model="form.numero" required placeholder="0000 0000 0000 0000" maxlength="19" @input="formatNumero" class="mono" />
+              <label for="pago-numero">Número de Tarjeta</label>
+              <input id="pago-numero" v-model="form.numero" required placeholder="0000 0000 0000 0000" maxlength="19" @input="formatNumero" class="mono" autocomplete="cc-number" />
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label>Expiración</label>
-                <input v-model="form.expiracion" required placeholder="MM/YY" maxlength="5" @input="formatExpiracion" class="mono" style="text-align:center" />
+                <label for="pago-expiracion">Expiración</label>
+                <input id="pago-expiracion" v-model="form.expiracion" required placeholder="MM/YY" maxlength="5" @input="formatExpiracion" class="mono input-center" autocomplete="cc-exp" />
               </div>
               <div class="form-group">
-                <label>CVC</label>
-                <input v-model="form.cvc" required placeholder="123" maxlength="3" pattern="\d{3}" class="mono" style="text-align:center" />
+                <label for="pago-cvc">CVC</label>
+                <input id="pago-cvc" v-model="form.cvc" required placeholder="123" maxlength="3" pattern="\d{3}" class="mono input-center" autocomplete="cc-csc" />
               </div>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;padding:.9rem" :disabled="procesando">
-              {{ procesando ? 'Procesando…' : 'Pagar Ahora 🔒' }}
+            <div v-if="errorPago" class="alert alert-error" role="alert" aria-live="assertive">{{ errorPago }}</div>
+            <button type="submit" class="btn btn-primary btn-pagar" :disabled="procesando">
+              {{ procesando ? 'Procesando…' : 'Pagar Ahora' }}
             </button>
-            <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.75rem">
-              Pago seguro simulado. No se realizará ningún cargo real.
-            </p>
+            <p class="pago-nota">Pago seguro simulado. No se realizará ningún cargo real.</p>
           </form>
         </div>
       </div>
@@ -98,6 +98,7 @@ const cart = useCartStore()
 const procesando = ref(false)
 const exito = ref(false)
 const ordenId = ref('')
+const errorPago = ref('')
 
 const form = reactive({ titular: '', numero: '', expiracion: '', cvc: '' })
 
@@ -115,6 +116,7 @@ function formatExpiracion(e) {
 }
 
 async function pagar() {
+  errorPago.value = ''
   procesando.value = true
   try {
     await new Promise(r => setTimeout(r, 1800))
@@ -123,7 +125,7 @@ async function pagar() {
     exito.value = true
     await cart.fetch()
   } catch (e) {
-    alert(e.response?.data?.error || 'Error al procesar el pago')
+    errorPago.value = e.response?.data?.error || 'Error al procesar el pago. Inténtalo de nuevo.'
   } finally {
     procesando.value = false
   }
@@ -131,7 +133,9 @@ async function pagar() {
 </script>
 
 <style scoped>
+.checkout-container { max-width: 960px; padding-top: 2rem; }
 .empty-cart { text-align: center; padding: 4rem; color: var(--muted); }
+.btn-mt { margin-top: 1rem; }
 
 .checkout-layout {
   display: grid;
@@ -141,7 +145,7 @@ async function pagar() {
 }
 @media (max-width: 700px) { .checkout-layout { grid-template-columns: 1fr; } }
 
-.order-summary h2, .payment-section h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 1rem; }
+.order-summary h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 1rem; }
 .summary-items { display: flex; flex-direction: column; gap: .6rem; margin-bottom: 1rem; }
 .summary-item { display: flex; align-items: center; gap: .6rem; font-size: .9rem; }
 .qty-badge { background: #f3f4f6; border-radius: 6px; padding: .1rem .5rem; font-size: .8rem; font-weight: 700; }
@@ -165,6 +169,14 @@ async function pagar() {
 .card-label { font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; opacity: .7; margin-bottom: .15rem; }
 .card-holder-display { font-weight: 600; font-size: .95rem; letter-spacing: .04em; text-transform: uppercase; }
 
+.payment-card { margin-top: 1.5rem; }
+.payment-title { font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem; }
+.pago-exito { text-align: center; }
+.pago-check { font-size: 2rem; margin-bottom: .5rem; }
+.pago-actions { margin-top: 1rem; }
+.btn-pagar { width: 100%; padding: 0.9rem; }
+.pago-nota { text-align: center; font-size: .75rem; color: var(--muted); margin-top: .75rem; }
 .mono { font-family: monospace; }
+.input-center { text-align: center; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 </style>

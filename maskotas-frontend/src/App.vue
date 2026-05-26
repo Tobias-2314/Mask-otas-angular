@@ -1,10 +1,33 @@
 <template>
+  <!-- Saltar al contenido principal (accesibilidad de teclado) -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
   <div class="app-wrapper">
-    <NavBar />
-    <main>
+    <!-- El <header> envuelve la navegación principal (HTML semántico) -->
+    <header>
+      <NavBar />
+    </header>
+
+    <main id="main-content">
       <RouterView />
     </main>
+
     <ChatWidget />
+
+    <!-- Controles de accesibilidad flotantes -->
+    <div class="a11y-controls" role="group" aria-label="Controles de accesibilidad">
+      <button
+        class="a11y-btn"
+        @click="toggleDark"
+        :aria-label="isDark ? 'Activar modo claro' : 'Activar modo oscuro'"
+        :title="isDark ? 'Modo claro' : 'Modo oscuro'"
+      >
+        <svg v-if="isDark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="a11y-btn" @click="increaseFontSize" aria-label="Aumentar tamaño de letra" title="Aumentar letra">A+</button>
+      <button class="a11y-btn" @click="decreaseFontSize" aria-label="Reducir tamaño de letra" title="Reducir letra">A-</button>
+    </div>
 
     <footer class="footer">
       <div class="container">
@@ -13,13 +36,14 @@
             <div class="footer-logo">MASKOTAS</div>
             <p class="footer-tagline">Cuidamos a quienes más amas con experiencia médica y amor incondicional.</p>
             <div class="footer-social">
-              <a href="#" class="social-dot" aria-label="Instagram">ig</a>
-              <a href="#" class="social-dot" aria-label="Facebook">fb</a>
-              <a href="#" class="social-dot" aria-label="Twitter">tw</a>
+              <!-- rel="noopener noreferrer" requerido en enlaces externos con target="_blank" -->
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-dot" aria-label="Instagram (abre en nueva pestaña)">ig</a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-dot" aria-label="Facebook (abre en nueva pestaña)">fb</a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-dot" aria-label="Twitter (abre en nueva pestaña)">tw</a>
             </div>
           </div>
 
-          <nav class="footer-nav">
+          <nav class="footer-nav" aria-label="Navegación del pie de página">
             <div class="footer-col">
               <h5 class="footer-col-title">Clínica</h5>
               <ul>
@@ -68,10 +92,50 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import NavBar from './components/NavBar.vue'
 import ChatWidget from './components/ChatWidget.vue'
 
 const year = new Date().getFullYear()
+const isDark = ref(false)
+const fontScale = ref(1)
+
+function toggleDark() {
+  isDark.value = !isDark.value
+  document.documentElement.setAttribute('data-theme', isDark.value ? 'dark' : 'light')
+  localStorage.setItem('maskotas-theme', isDark.value ? 'dark' : 'light')
+}
+
+function increaseFontSize() {
+  if (fontScale.value < 1.4) {
+    fontScale.value = Math.round((fontScale.value + 0.1) * 10) / 10
+    applyFontScale()
+  }
+}
+
+function decreaseFontSize() {
+  if (fontScale.value > 0.8) {
+    fontScale.value = Math.round((fontScale.value - 0.1) * 10) / 10
+    applyFontScale()
+  }
+}
+
+function applyFontScale() {
+  document.documentElement.style.setProperty('--font-scale', fontScale.value)
+  localStorage.setItem('maskotas-font-scale', fontScale.value)
+}
+
+onMounted(() => {
+  /* Restaurar preferencias guardadas */
+  const savedTheme = localStorage.getItem('maskotas-theme')
+  if (savedTheme === 'dark') {
+    isDark.value = true
+    document.documentElement.setAttribute('data-theme', 'dark')
+  }
+  const savedScale = parseFloat(localStorage.getItem('maskotas-font-scale') || '1')
+  fontScale.value = savedScale
+  document.documentElement.style.setProperty('--font-scale', savedScale)
+})
 </script>
 
 <style scoped>
@@ -132,6 +196,10 @@ main { flex: 1; padding-bottom: 2.5rem; }
   color: var(--gold);
   transform: translateY(-2px);
 }
+.social-dot:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
 
 .footer-nav { display: flex; gap: 3rem; }
 @media (max-width: 600px) { .footer-nav { gap: 1.5rem; flex-wrap: wrap; } }
@@ -143,6 +211,7 @@ main { flex: 1; padding-bottom: 2.5rem; }
   transition: color 0.18s;
 }
 .footer-col a:hover { color: var(--gold); }
+.footer-col a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 2px; }
 
 .footer-col-title {
   font-family: 'Jost', sans-serif;

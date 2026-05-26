@@ -3,7 +3,8 @@
     <div class="auth-brand">
       <div class="brand-content">
         <div class="brand-logo">MASKOTAS</div>
-        <h2 class="brand-title">Crea tu <em>cuenta</em></h2>
+        <!-- Texto decorativo del panel lateral — no es un encabezado de sección -->
+        <p class="brand-title">Crea tu <em>cuenta</em></p>
         <p class="brand-desc">Únete a nuestra comunidad y accede a todos los servicios de la clínica de forma rápida y sencilla.</p>
         <div class="brand-features">
           <div class="bf-item" v-for="f in features" :key="f">
@@ -28,25 +29,59 @@
 
         <form @submit.prevent="submit" class="auth-form">
           <div class="form-group">
-            <label>Nombre completo</label>
-            <input type="text" v-model="form.nombre" required placeholder="Tu nombre" autocomplete="name" />
+            <label for="reg-nombre">Nombre completo</label>
+            <input
+              id="reg-nombre"
+              type="text"
+              v-model="form.nombre"
+              required
+              placeholder="Tu nombre"
+              autocomplete="name"
+              :aria-invalid="error ? 'true' : 'false'"
+            />
           </div>
           <div class="form-group">
-            <label>Email</label>
-            <input type="email" v-model="form.email" required placeholder="tu@email.com" autocomplete="email" />
+            <label for="reg-email">Email</label>
+            <input
+              id="reg-email"
+              type="email"
+              v-model="form.email"
+              required
+              placeholder="tu@email.com"
+              autocomplete="email"
+              :aria-invalid="error ? 'true' : 'false'"
+            />
           </div>
           <div class="form-group">
-            <label>Contraseña</label>
-            <input type="password" v-model="form.password" required placeholder="Mínimo 6 caracteres" minlength="6" autocomplete="new-password" />
+            <label for="reg-password">Contraseña</label>
+            <input
+              id="reg-password"
+              type="password"
+              v-model="form.password"
+              required
+              placeholder="Mínimo 6 caracteres"
+              minlength="6"
+              autocomplete="new-password"
+              :aria-invalid="error ? 'true' : 'false'"
+            />
           </div>
           <div class="form-group">
-            <label>Confirmar contraseña</label>
-            <input type="password" v-model="form.password_confirmation" required placeholder="Repite tu contraseña" autocomplete="new-password" />
+            <label for="reg-confirm">Confirmar contraseña</label>
+            <input
+              id="reg-confirm"
+              type="password"
+              v-model="form.password_confirmation"
+              required
+              placeholder="Repite tu contraseña"
+              autocomplete="new-password"
+              :aria-invalid="error ? 'true' : 'false'"
+            />
           </div>
 
-          <div v-if="error" class="alert alert-error">{{ error }}</div>
+          <!-- role="alert" anuncia el error a lectores de pantalla -->
+          <div v-if="error" class="alert alert-error" role="alert" aria-live="assertive">{{ error }}</div>
 
-          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:.85rem" :disabled="loading">
+          <button type="submit" class="btn btn-primary btn-block" :disabled="loading">
             <span v-if="loading" class="spinner"></span>
             {{ loading ? 'Registrando…' : 'Crear Cuenta' }}
           </button>
@@ -176,6 +211,7 @@ async function submit() {
 .form-header p { font-size: 0.9rem; color: var(--text-muted); }
 
 .auth-form { display: flex; flex-direction: column; }
+.btn-block { width: 100%; justify-content: center; padding: 0.85rem; }
 
 .switch-link { text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: var(--text-muted); }
 .switch-link a { color: var(--forest); font-weight: 700; margin-left: 0.25rem; }

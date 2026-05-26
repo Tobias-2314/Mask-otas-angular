@@ -15,8 +15,9 @@
           <h2>Información<br><em>de contacto</em></h2>
 
           <div class="info-items">
-            <a href="#" class="info-item" v-for="item in info" :key="item.label">
-              <div class="info-icon" v-html="item.svg"></div>
+            <!-- aria-hidden en el icono SVG: el texto label/value ya describe el contenido -->
+            <a :href="item.href" class="info-item" v-for="item in info" :key="item.label">
+              <div class="info-icon" v-html="item.svg" aria-hidden="true"></div>
               <div>
                 <div class="info-label">{{ item.label }}</div>
                 <div class="info-value">{{ item.value }}</div>
@@ -39,33 +40,34 @@
         <div class="form-col card">
           <h2>Envíanos un<br><em>mensaje</em></h2>
 
-          <div v-if="enviado" class="success-state">
-            <div class="success-icon">
+          <!-- role="status" anuncia el éxito del envío a lectores de pantalla -->
+          <div v-if="enviado" class="success-state" role="status" aria-live="polite">
+            <div class="success-icon" aria-hidden="true">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <h3>¡Mensaje enviado!</h3>
-            <p>Te responderemos lo antes posible.</p>
+            <p>Te responderemos lo antes posible. Puedes <RouterLink to="/">volver al inicio</RouterLink> o <RouterLink to="/citas">agendar una cita</RouterLink>.</p>
           </div>
           <form v-else @submit.prevent="enviar" class="contacto-form">
             <div class="form-row">
               <div class="form-group">
-                <label>Nombre</label>
-                <input v-model="form.nombre" required placeholder="Tu nombre" />
+                <label for="contacto-nombre">Nombre</label>
+                <input id="contacto-nombre" v-model="form.nombre" required placeholder="Tu nombre" autocomplete="name" />
               </div>
               <div class="form-group">
-                <label>Email</label>
-                <input type="email" v-model="form.email" required placeholder="tu@email.com" />
+                <label for="contacto-email">Email</label>
+                <input id="contacto-email" type="email" v-model="form.email" required placeholder="tu@email.com" autocomplete="email" />
               </div>
             </div>
             <div class="form-group">
-              <label>Asunto</label>
-              <input v-model="form.asunto" required placeholder="¿En qué podemos ayudarte?" />
+              <label for="contacto-asunto">Asunto</label>
+              <input id="contacto-asunto" v-model="form.asunto" required placeholder="¿En qué podemos ayudarte?" />
             </div>
             <div class="form-group">
-              <label>Mensaje</label>
-              <textarea v-model="form.mensaje" rows="5" required placeholder="Escribe tu mensaje aquí…"></textarea>
+              <label for="contacto-mensaje">Mensaje</label>
+              <textarea id="contacto-mensaje" v-model="form.mensaje" rows="5" required placeholder="Escribe tu mensaje aquí…"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:.85rem">Enviar Mensaje</button>
+            <button type="submit" class="btn btn-primary btn-enviar">Enviar Mensaje</button>
           </form>
         </div>
       </div>
@@ -83,17 +85,20 @@ const info = [
   {
     svg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
     label: 'Dirección',
-    value: 'Calle Veterinaria 123, Madrid'
+    value: 'Calle Veterinaria 123, Madrid',
+    href: 'https://maps.google.com/?q=Calle+Veterinaria+123+Madrid'
   },
   {
     svg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16z"/></svg>`,
     label: 'Teléfono',
-    value: '+34 912 345 678'
+    value: '+34 912 345 678',
+    href: 'tel:+34912345678'
   },
   {
     svg: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
     label: 'Email',
-    value: 'info@maskotas.com'
+    value: 'info@maskotas.com',
+    href: 'mailto:info@maskotas.com'
   },
 ]
 
@@ -222,6 +227,7 @@ function enviar() { enviado.value = true }
 .form-col h2 em { font-style: italic; color: var(--sage); }
 
 .contacto-form { display: flex; flex-direction: column; }
+.btn-enviar { width: 100%; justify-content: center; padding: 0.85rem; }
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

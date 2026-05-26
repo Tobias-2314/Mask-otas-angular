@@ -1,5 +1,5 @@
 <template>
-  <div class="container" style="max-width:900px;padding-top:2rem">
+  <div class="container citas-container">
     <div class="page-header">
       <h1>Mis citas</h1>
       <button class="btn btn-primary" @click="toggleForm">
@@ -8,49 +8,49 @@
     </div>
 
     <!-- Formulario -->
-    <div v-if="showForm" class="card" style="margin-bottom:1.5rem">
-      <h2 style="margin-bottom:1.5rem;font-size:1.15rem;font-weight:800">Agendar nueva cita</h2>
+    <div v-if="showForm" class="card form-card">
+      <h2 class="form-card-title">Agendar nueva cita</h2>
       <form @submit.prevent="guardar">
 
         <!-- Datos del dueño -->
         <h3 class="section-label">Datos del Dueño</h3>
         <div class="form-row">
           <div class="form-group">
-            <label>Nombre completo</label>
-            <input v-model="form.nombreDueno" required />
+            <label for="cita-nombre-dueno">Nombre completo</label>
+            <input id="cita-nombre-dueno" v-model="form.nombreDueno" required autocomplete="name" />
           </div>
           <div class="form-group">
-            <label>Email</label>
-            <input type="email" v-model="form.email" required />
+            <label for="cita-email">Email</label>
+            <input id="cita-email" type="email" v-model="form.email" required autocomplete="email" />
           </div>
           <div class="form-group">
-            <label>Teléfono</label>
-            <input v-model="form.telefono" required placeholder="600 123 456" />
+            <label for="cita-telefono">Teléfono</label>
+            <input id="cita-telefono" v-model="form.telefono" required placeholder="600 123 456" autocomplete="tel" />
           </div>
         </div>
 
         <!-- Datos de la cita -->
-        <h3 class="section-label" style="margin-top:1.5rem">Datos de la Cita</h3>
+        <h3 class="section-label section-label--mt">Datos de la Cita</h3>
         <div class="form-row">
           <div class="form-group">
-            <label>Mascota registrada</label>
-            <select v-model="mascotaId" @change="onMascotaChange">
+            <label for="cita-mascota-sel">Mascota registrada</label>
+            <select id="cita-mascota-sel" v-model="mascotaId" @change="onMascotaChange">
               <option value="">— Sin seleccionar —</option>
               <option v-for="m in mascotas" :key="m.id" :value="m.id">
                 {{ m.nombre }} ({{ m.tipo }})
               </option>
             </select>
-            <small v-if="mascotas.length === 0" style="color:var(--muted)">
+            <small v-if="mascotas.length === 0" class="hint-muted">
               Sin mascotas registradas. <RouterLink to="/mi-cuenta">Regístralas aquí</RouterLink>.
             </small>
           </div>
           <div class="form-group">
-            <label>Nombre mascota</label>
-            <input v-model="form.nombreMascota" required :disabled="!!mascotaId" />
+            <label for="cita-nombre-mascota">Nombre mascota</label>
+            <input id="cita-nombre-mascota" v-model="form.nombreMascota" required :disabled="!!mascotaId" />
           </div>
           <div class="form-group">
-            <label>Tipo de mascota</label>
-            <select v-model="form.tipoMascota" :disabled="!!mascotaId">
+            <label for="cita-tipo-mascota">Tipo de mascota</label>
+            <select id="cita-tipo-mascota" v-model="form.tipoMascota" :disabled="!!mascotaId">
               <option value="">— Seleccionar —</option>
               <option>Perro</option>
               <option>Gato</option>
@@ -60,8 +60,8 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Servicio</label>
-            <select v-model="form.tipoServicio" required>
+            <label for="cita-servicio">Servicio</label>
+            <select id="cita-servicio" v-model="form.tipoServicio" required>
               <option>Consulta General</option>
               <option>Vacunación</option>
               <option>Desparasitación</option>
@@ -72,33 +72,36 @@
         </div>
 
         <!-- Fecha y hora -->
-        <h3 class="section-label" style="margin-top:1.5rem">Selecciona Fecha y Hora</h3>
-        <div class="form-group" style="max-width:280px">
-          <label>Fecha de la cita</label>
-          <input type="date" v-model="form.fechaPreferida" :min="today" required @change="form.horaPreferida = ''" />
+        <h3 class="section-label section-label--mt">Selecciona Fecha y Hora</h3>
+        <div class="form-group form-group--narrow">
+          <label for="cita-fecha">Fecha de la cita</label>
+          <input id="cita-fecha" type="date" v-model="form.fechaPreferida" :min="today" required @change="form.horaPreferida = ''" />
         </div>
 
         <template v-if="form.fechaPreferida">
-          <div class="slots-label">Horarios disponibles</div>
+          <div class="slots-label" role="group" aria-label="Horarios disponibles">Horarios disponibles</div>
           <div class="slots-grid">
             <button v-for="h in horas" :key="h" type="button"
               :class="['slot-btn', isOcupada(h) ? 'slot-occupied' : form.horaPreferida === h ? 'slot-selected' : 'slot-free']"
               :disabled="isOcupada(h)"
+              :aria-pressed="form.horaPreferida === h"
+              :aria-label="isOcupada(h) ? `${h} — Ocupado` : `Seleccionar ${h}`"
               @click="form.horaPreferida = h">
               {{ h }}
-              <span v-if="isOcupada(h)" class="slot-tag">Ocupado</span>
+              <span v-if="isOcupada(h)" class="slot-tag" aria-hidden="true">Ocupado</span>
             </button>
           </div>
           <p v-if="!form.horaPreferida" class="slots-hint">Selecciona un horario disponible para continuar</p>
         </template>
 
-        <div class="form-group" style="margin-top:1.25rem">
-          <label>Notas adicionales</label>
-          <textarea v-model="form.notas" rows="2" placeholder="Información de salud relevante…"></textarea>
+        <div class="form-group form-group--top">
+          <label for="cita-notas">Notas adicionales</label>
+          <textarea id="cita-notas" v-model="form.notas" rows="2" placeholder="Información de salud relevante…"></textarea>
         </div>
 
-        <div v-if="formError" class="alert alert-error">{{ formError }}</div>
-        <div v-if="formSuccess" class="alert alert-success">{{ formSuccess }}</div>
+        <!-- role="alert" anuncia cambios de estado a lectores de pantalla -->
+        <div v-if="formError" class="alert alert-error" role="alert" aria-live="assertive">{{ formError }}</div>
+        <div v-if="formSuccess" class="alert alert-success" role="status" aria-live="polite">{{ formSuccess }}</div>
 
         <button type="submit" class="btn btn-primary" :disabled="saving || !form.horaPreferida">
           {{ saving ? 'Guardando…' : (form.horaPreferida ? `Confirmar cita — ${form.fechaPreferida} a las ${form.horaPreferida}` : 'Selecciona un horario') }}
@@ -112,7 +115,14 @@
     <div v-else class="card" style="padding:0;overflow:hidden">
       <table class="table">
         <thead>
-          <tr><th>Fecha</th><th>Hora</th><th>Servicio</th><th>Mascota</th><th>Estado</th><th></th></tr>
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Hora</th>
+            <th scope="col">Servicio</th>
+            <th scope="col">Mascota</th>
+            <th scope="col">Estado</th>
+            <th scope="col"><span class="sr-only">Acciones</span></th>
+          </tr>
         </thead>
         <tbody>
           <tr v-for="c in citas" :key="c.id">
@@ -122,7 +132,12 @@
             <td>{{ c.mascota }}</td>
             <td><span :class="['badge', estadoBadge(c.estado)]">{{ c.estado }}</span></td>
             <td>
-              <button class="btn btn-danger btn-sm" @click="eliminar(c.id)" :disabled="c.estado === 'COMPLETADA'">✕</button>
+              <button
+                class="btn btn-danger btn-sm"
+                @click="eliminar(c.id)"
+                :disabled="c.estado === 'COMPLETADA'"
+                :aria-label="`Eliminar cita del ${c.fechaPreferida}`"
+              >✕</button>
             </td>
           </tr>
         </tbody>
@@ -246,6 +261,17 @@ onMounted(cargar)
 </script>
 
 <style scoped>
+/* Texto solo para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .section-label {
   font-size: .78rem;
   font-weight: 700;
@@ -256,6 +282,14 @@ onMounted(cargar)
   padding-bottom: .5rem;
   margin-bottom: 1rem;
 }
+.section-label--mt { margin-top: 1.5rem; }
+.citas-container { max-width: 900px; padding-top: 2rem; }
+.form-card { margin-bottom: 1.5rem; }
+.form-card-title { margin-bottom: 1.5rem; font-size: 1.15rem; font-weight: 800; }
+.form-group--narrow { max-width: 280px; }
+.form-group--top { margin-top: 1.25rem; }
+.hint-muted { font-size: .82rem; color: var(--muted); }
+
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
 
@@ -282,7 +316,9 @@ onMounted(cargar)
 }
 .slot-free     { background: var(--primary); color: #fff; }
 .slot-free:hover { filter: brightness(1.12); transform: translateY(-1px); }
+.slot-free:focus-visible { outline: 2px solid var(--forest); outline-offset: 2px; }
 .slot-selected { background: #1a3d15; color: #fff; border-color: #f59e0b; box-shadow: 0 0 0 3px #f59e0b40; }
+.slot-selected:focus-visible { outline: 2px solid #f59e0b; outline-offset: 2px; }
 .slot-occupied { background: #f3f4f6; color: #9ca3af; border-color: #e5e7eb; cursor: not-allowed; }
 .slot-tag { font-size: .6rem; opacity: .8; font-weight: 400; }
 </style>

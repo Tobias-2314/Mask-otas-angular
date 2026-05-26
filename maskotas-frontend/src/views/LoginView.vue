@@ -4,7 +4,8 @@
     <div class="auth-brand">
       <div class="brand-content">
         <div class="brand-logo">MASKOTAS</div>
-        <h2 class="brand-title">Bienvenido<br><em>de vuelta</em></h2>
+        <!-- Texto decorativo del panel lateral — no es un encabezado de sección -->
+        <p class="brand-title">Bienvenido<br><em>de vuelta</em></p>
         <p class="brand-desc">Tu clínica veterinaria de confianza. Accede a tu cuenta para gestionar citas y el cuidado de tu mascota.</p>
         <div class="brand-features">
           <div class="bf-item" v-for="f in features" :key="f">
@@ -31,17 +32,34 @@
 
         <form @submit.prevent="submit" class="auth-form">
           <div class="form-group">
-            <label>Email</label>
-            <input type="email" v-model="form.email" required placeholder="tu@email.com" autocomplete="email" />
+            <label for="login-email">Email</label>
+            <input
+              id="login-email"
+              type="email"
+              v-model="form.email"
+              required
+              placeholder="tu@email.com"
+              autocomplete="email"
+              :aria-invalid="error ? 'true' : 'false'"
+            />
           </div>
           <div class="form-group">
-            <label>Contraseña</label>
-            <input type="password" v-model="form.password" required placeholder="••••••••" autocomplete="current-password" />
+            <label for="login-password">Contraseña</label>
+            <input
+              id="login-password"
+              type="password"
+              v-model="form.password"
+              required
+              placeholder="••••••••"
+              autocomplete="current-password"
+              :aria-invalid="error ? 'true' : 'false'"
+            />
           </div>
 
-          <div v-if="error" class="alert alert-error">{{ error }}</div>
+          <!-- role="alert" anuncia el error a lectores de pantalla -->
+          <div v-if="error" class="alert alert-error" role="alert" aria-live="assertive">{{ error }}</div>
 
-          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:.85rem" :disabled="loading">
+          <button type="submit" class="btn btn-primary btn-block" :disabled="loading">
             <span v-if="loading" class="spinner"></span>
             {{ loading ? 'Ingresando…' : 'Ingresar' }}
           </button>
@@ -188,6 +206,7 @@ async function submit() {
 .form-header p { font-size: 0.9rem; color: var(--text-muted); }
 
 .auth-form { display: flex; flex-direction: column; }
+.btn-block { width: 100%; justify-content: center; padding: 0.85rem; }
 
 .switch-link {
   text-align: center;
