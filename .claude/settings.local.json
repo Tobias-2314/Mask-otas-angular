@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit *)",
+      "Bash(curl -sv http://localhost:8080/api/chat)",
+      "Bash(cmd.exe *)",
+      "Bash(curl -sv -X POST http://localhost:8080/api/chat -H 'Content-Type: application/json' -H 'Origin: http://localhost:5173' -d '{\"message\":\"hola\"}')",
+      "Bash(curl -s http://localhost:8080/api/auth/me)",
+      "Bash(curl -s -X POST http://localhost:8080/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"test@test.com\",\"password\":\"test\"}')",
+      "Bash(curl -sI http://localhost:8080/)",
+      "Bash(sort -t: -k2 -n)",
+      "Bash(fuser 8080/tcp)",
+      "Bash(curl *)",
+      "Bash(python3 -c \"import sys,json; models=json.load\\(sys.stdin\\)['data']; [print\\(m['id']\\) for m in models if 'llama' in m['id'].lower\\(\\) or 'gemma' in m['id'].lower\\(\\) or 'mistral' in m['id'].lower\\(\\)]\")",
+      "Bash(python3 -c \"import sys,json; ps=json.load\\(sys.stdin\\); [print\\(f'{p[\\\\\"nombre\\\\\"]} | {p[\\\\\"categoria\\\\\"]} | {p[\\\\\"precio\\\\\"]}€'\\) for p in ps[:15]]\")",
+      "Bash(python3 -c ' *)",
+      "Bash(xargs ls -la)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['choices'][0]['message']['content']\\)\")",
+      "Bash(git rm *)"
+    ]
+  }
+}
