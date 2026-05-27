@@ -43,7 +43,6 @@ public class AuthController {
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
         securityContextRepository.saveContext(context, httpRequest, httpResponse);
-
         Usuario usuario = (Usuario) authentication.getPrincipal();
 
         String redirect = "/";
