@@ -1,0 +1,9 @@
+build/
+target/
+.gradle/
+*.class
+*.jar
+*.war
+
+# Secrets — never commit real values here
+# application-local.properties

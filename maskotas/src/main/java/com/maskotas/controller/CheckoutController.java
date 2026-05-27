@@ -1,0 +1,64 @@
+package com.maskotas.controller;
+
+import com.maskotas.model.CartItem;
+import com.maskotas.model.Order;
+import com.maskotas.model.OrderItem;
+import com.maskotas.model.Producto;
+import com.maskotas.model.Usuario;
+import com.maskotas.service.OrdenService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/checkout")
+public class CheckoutController {
+
+    @Autowired
+    private OrdenService ordenService;
+
+    @PostMapping
+    public ResponseEntity<?> store(@AuthenticationPrincipal Usuario usuario,
+                                   @RequestBody Map<String, Object> body,
+                                   HttpSession session) {
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        if (cart == null || cart.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El carrito está vacío"));
+        }
+
+        BigDecimal total = cart.stream()
+            .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Order order = new Order();
+        order.setUsuario(usuario);
+        order.setTotal(total.doubleValue());
+        order.setFecha(java.time.LocalDateTime.now());
+
+        List<OrderItem> items = new ArrayList<>();
+        for (CartItem item : cart) {
+            OrderItem oi = new OrderItem();
+            Producto p = new Producto();
+            p.setId(Long.valueOf(item.getId()));
+            p.setNombre(item.getName());
+            p.setPrecio(item.getPrice().doubleValue());
+            oi.setProducto(p);
+            oi.setCantidad(item.getQuantity());
+            oi.setSubtotal(item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())).doubleValue());
+            oi.setOrder(order);
+            items.add(oi);
+        }
+        order.setItems(items);
+
+        ordenService.save(order);
+
+        session.removeAttribute("cart");
+        return ResponseEntity.ok(Map.of("success", true, "orderId", order.getId()));
+    }
+}
