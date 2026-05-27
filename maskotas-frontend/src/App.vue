@@ -66,6 +66,7 @@
                 <li><RouterLink to="/politica-privacidad">Privacidad</RouterLink></li>
                 <li><RouterLink to="/politica-cookies">Cookies</RouterLink></li>
                 <li><RouterLink to="/terminos-servicio">Términos</RouterLink></li>
+                <li><RouterLink to="/sostenibilidad">Sostenibilidad</RouterLink></li>
               </ul>
             </div>
           </nav>

@@ -9,6 +9,7 @@ const routes = [
   { path: '/politica-cookies', component: () => import('../views/PoliticaCookiesView.vue') },
   { path: '/politica-privacidad', component: () => import('../views/PoliticaPrivacidadView.vue') },
   { path: '/terminos-servicio', component: () => import('../views/TerminosServicioView.vue') },
+  { path: '/sostenibilidad', component: () => import('../views/SostenibilidadView.vue') },
   { path: '/tienda', component: () => import('../views/TiendaView.vue') },
   { path: '/tienda/:id', component: () => import('../views/ProductoView.vue') },
   { path: '/carrito', component: () => import('../views/CarritoView.vue') },
