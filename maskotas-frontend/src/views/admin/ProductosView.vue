@@ -23,7 +23,11 @@
         </div>
         <div class="form-row">
           <div class="form-group"><label>Stock</label><input type="number" v-model="form.stock" required /></div>
-          <div class="form-group"><label>Imagen (URL)</label><input v-model="form.imagen" /></div>
+          <div class="form-group">
+            <label>Imagen (URL)</label>
+            <input v-model="form.imagen" placeholder="https://..." />
+            <img v-if="form.imagen" :src="form.imagen" class="img-preview" alt="preview" />
+          </div>
         </div>
         <div class="form-group"><label>Descripción</label><textarea v-model="form.descripcion" rows="2"></textarea></div>
         <div class="form-actions">
@@ -75,7 +79,7 @@ async function cargar() {
 function abrirForm(p = null) {
   editando.value = p?.id || null
   form.value = p
-    ? { nombre: p.name, precio: p.price, stock: p.stock, imagen: '', descripcion: '' }
+    ? { nombre: p.name, precio: p.price, stock: p.stock, imagen: p.imagen || '', descripcion: p.descripcion || '' }
     : { nombre: '', precio: '', stock: '', imagen: '', descripcion: '' }
   showForm.value = true
 }
@@ -103,3 +107,15 @@ async function eliminar(id) {
 
 onMounted(cargar)
 </script>
+
+<style scoped>
+.img-preview {
+  display: block;
+  margin-top: 0.5rem;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+</style>

@@ -124,6 +124,8 @@ public class AdminController {
             m.put("name", p.getNombre());
             m.put("price", p.getPrecio());
             m.put("stock", p.getStock());
+            m.put("imagen", p.getImagen() != null ? p.getImagen() : "");
+            m.put("descripcion", p.getDescripcion() != null ? p.getDescripcion() : "");
             result.add(m);
         }
         return ResponseEntity.ok(result);
