@@ -26,6 +26,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-maskotas}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-maskotas}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-maskotas123}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
     depends_on:
       postgres:
         condition: service_healthy
