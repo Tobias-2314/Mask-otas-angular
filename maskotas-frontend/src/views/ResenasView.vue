@@ -104,8 +104,9 @@ onMounted(async () => {
 async function publicar() {
   saving.value = true
   try {
-    const { data } = await crearResena(form.calificacion, form.comentario)
-    resenas.value.unshift(data)
+    await crearResena(form.calificacion, form.comentario)
+    const { data } = await getResenas()
+    resenas.value = data
     exito.value = true
   } finally {
     saving.value = false

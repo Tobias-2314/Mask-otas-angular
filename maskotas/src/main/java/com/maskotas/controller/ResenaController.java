@@ -19,22 +19,26 @@ public class ResenaController {
 
     @GetMapping("/ultimas")
     public ResponseEntity<?> ultimasResenas() {
-        return ResponseEntity.ok(resenaService.findAll().stream().limit(3).map(r -> Map.of(
-            "id", r.getId(),
-            "calificacion", r.getValoracion(),
-            "comentario", r.getComentario(),
-            "usuario", Map.of("nombre", r.getUsuario().getNombre())
-        )).toList());
+        return ResponseEntity.ok(resenaService.findAll().stream().limit(3).map(r -> {
+            java.util.Map<String, Object> map = new java.util.HashMap<>();
+            map.put("id", r.getId());
+            map.put("calificacion", r.getValoracion());
+            map.put("comentario", r.getComentario());
+            map.put("usuario", r.getUsuario() != null ? Map.of("nombre", r.getUsuario().getNombre()) : Map.of("nombre", "Anónimo"));
+            return map;
+        }).toList());
     }
 
     @GetMapping
     public ResponseEntity<?> verResenas() {
-        return ResponseEntity.ok(resenaService.findAll().stream().map(r -> Map.of(
-            "id", r.getId(),
-            "calificacion", r.getValoracion(),
-            "comentario", r.getComentario(),
-            "usuario", Map.of("nombre", r.getUsuario().getNombre())
-        )).toList());
+        return ResponseEntity.ok(resenaService.findAll().stream().map(r -> {
+            java.util.Map<String, Object> map = new java.util.HashMap<>();
+            map.put("id", r.getId());
+            map.put("calificacion", r.getValoracion());
+            map.put("comentario", r.getComentario());
+            map.put("usuario", r.getUsuario() != null ? Map.of("nombre", r.getUsuario().getNombre()) : Map.of("nombre", "Anónimo"));
+            return map;
+        }).toList());
     }
 
     @PostMapping
